@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Koszyk</title>
+	<meta charset="utf-8">
+	<title>TopSzop</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	{% load static %}
+
+	<link href="{% static 'server/style.css' %}" rel="stylesheet" type="text/css">
 </head>
+
 <body>
-<h1>Hello there, Kraft</h1>
+	<ul id="nav">
+		<li><a href="#">TopShop</a></li>
+		<li style="float: right;"><a href="#">Koszyk</a></li>
+	</ul>
+
+	{% if products_list %}
+		<ul>
+			{% for product in products_list %}
+				<!-- if product is not a string, replace it with correct call below -->
+				<li>{{ product }}</li>
+			{% endfor %}
+		</ul>
+		{% else %}
+		<p>Brak produktow w koszyku. Dodaj cos korzystajac z przycisku ponizej :)</p>
+	{% endif %}
+
+	<div id="footer">
+		<button type="button">Powrót</button>
+		<button type="button">Kup teraz</button>
+		<button type="button">Dodaj...</button>
+	</div>
 </body>
+
 </html>
