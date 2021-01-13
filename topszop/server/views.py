@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .database_operations import *
 
 # Create your views here.
 def test(request):
@@ -68,3 +69,25 @@ def test(request):
 # 3.1.7 manager_panel/edit_products/list
 # in:
 # out: all products
+
+# 3.1.8 manager_panel/edit_products/add_product (no data - display empty creator)
+# in:
+# out:
+
+# 3.1.8 manager_panel/edit_products/add_product
+# in: product data
+# out: 0 on success and added product data
+#      1 on duplicate and duplicate product data
+#      2 on incorrect data and to-be-added product data
+
+# 3.1.8 manager_panel/edit_products/add_product/confirm
+# in: product data
+# out: add product to database
+
+# 3.1.9 manager_panel/edit_products/remove
+# in:
+# out: all products
+
+# 3.1.9 manager_panel/edit_products/remove
+# in: id of product to remove
+# out: remove product from database, return updated list of products
