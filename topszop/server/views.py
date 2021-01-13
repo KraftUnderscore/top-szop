@@ -1,10 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+
 from .database_operations import *
+
 
 # Create your views here.
 def test(request):
     return HttpResponse("<h1>ELO</h1>")
+
 
 # My proposition for interface between Templates and backend:
 # <interface number> url path/ subpath, ex. for 3.1.2 localhost:8000/my_cart/search
@@ -16,6 +19,8 @@ def test(request):
 # 3.1.1 my_cart
 # in:
 # out: all products in cart
+def my_cart(request):
+    return render(request, 'server/index.html', {})
 
 # 3.1.1 my_cart/change_amount (all products in cart + chosen product)
 # in: productId
