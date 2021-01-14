@@ -6,6 +6,13 @@ def add_cart():
 
     Cart.objects.create(cartID=0)
 
+def cart_exist(cart_id):
+    try:
+        Cart.objects.get(id__exact=cart_id)
+        return True
+    except Cart.DoesNotExist:
+        return False
+
 def get_all_products_from_cart(cart_id=1):
     """Returns list of all products and their amounts in the cart in form of a tuple.
        amounts - list of ints
@@ -49,7 +56,8 @@ def remove_product_from_cart(product_id, cart_id=1):
     """Remove Cart_Product with matching product_id and cart_id <=> remove Product from Cart
        Returns True on success and False on failure."""
 
-    del_num = Cart_Product.objects.filter(cart_id__exact=cart_id).filter(product_id__exact=product_id).delete()
+    del_num = Cart_Product.objects.filter(cart_id__exact=cart_id) \
+                                  .filter(product_id__exact=product_id).delete()
     return True if del_num[0] > 0 else False
 
 def get_product_from_cart(product_id, cart_id=1):
@@ -57,7 +65,7 @@ def get_product_from_cart(product_id, cart_id=1):
        Returns None and amount=0 when product is not in the cart or cart doesn't exist."""
     try:
         cart_product = Cart_Product.objects.filter(cart_id__exact=cart_id) \
-                                        .get(product_id__exact=product_id)
+                                           .get(product_id__exact=product_id)
         return get_product_by_id(product_id), cart_product.amount
     except Cart_Product.DoesNotExist:
         return None, 0
