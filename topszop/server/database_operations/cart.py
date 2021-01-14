@@ -3,8 +3,7 @@ from server.models import Cart, Cart_Product, Product
 def get_all_product_from_cart(cart_id=1):
     """Returns list of all products and their amounts in the cart.
     amounts - list of ints
-    products - list of models.Product
-    """
+    products - list of models.Product"""
 
     products = []
     amounts = []
