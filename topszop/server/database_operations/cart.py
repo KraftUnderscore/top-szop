@@ -1,8 +1,6 @@
 from server.models import Cart, Cart_Product, Product
 from .product import get_product_by_id
 
-#TODO: Missing add_cart xD
-
 def add_cart():
     """Adds new Cart to database with incremental ID and the useless cartID is set to 0"""
 
