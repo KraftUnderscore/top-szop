@@ -1,33 +1,58 @@
 from server.models import Cart, Cart_Product, Product
+from .product import get_product_by_id
 
-def get_all_product_from_cart(cart_id=1):
-    """Returns list of all products and their amounts in the cart.
-    amounts - list of ints
-    products - list of models.Product"""
+def get_all_products_from_cart(cart_id=1):
+    """Returns list of all products and their amounts in the cart in form of a tuple.
+       amounts - list of ints
+       products - list of models.Product"""
 
     products = []
     amounts = []
 
     cart_products = Cart_Product.objects.filter(cart_id__exact=cart_id)
     for cart_product in cart_products:
-        products.append(Product.objects.get(id__exact=cart_product.product_id))
+        products.append(get_product_by_id(cart_product.product_id))
         amounts.append(cart_product.amount)
 
     return products, amounts
 
 def set_amount_of_product_in_cart(amount, product_id, cart_id=1):
-    """Find Cart by cart_id, find Product by product_id and set its amount to amount"""
+    """Find Cart by cart_id, find Product by product_id and set its amount to amount.
+       Returns True on success and False on failure."""
 
-    Cart_Product.objects.filter(cart_id__exact=cart_id) \
-                        .filter(product_id__exact=product_id) \
-                        .update(amount=amount)
+    num = Cart_Product.objects.filter(cart_id__exact=cart_id) \
+                              .filter(product_id__exact=product_id) \
+                              .update(amount=amount)
+    return True if num > 0 else False
 
 def add_product_to_cart(amount, product_id, cart_id=1):
-    """Add amount of new Product with product_id to Cart with cart_id"""
+    """Add amount of new Product with product_id to Cart with cart_id
+       Returns True on success and False on failure."""
+
+    if not get_product_by_id(product_id):
+        return False
+
+    try:
+        Cart.objects.get(id__exact=cart_id)
+    except Cart.DoesNotExist:
+        return False
 
     Cart_Product.objects.create(cart_id=cart_id, product_id=product_id, amount=amount)
+    return True
 
 def remove_product_from_cart(product_id, cart_id=1):
-    """Remove Cart_Product with matching product_id and cart_id <=> remove Product from Cart"""
+    """Remove Cart_Product with matching product_id and cart_id <=> remove Product from Cart
+       Returns True on success and False on failure."""
 
-    Cart_Product.objects.filter(cart_id__exact=cart_id).filter(product_id__exact=product_id).delete()
+    del_num = Cart_Product.objects.filter(cart_id__exact=cart_id).filter(product_id__exact=product_id).delete()
+    return True if del_num[0] > 0 else False
+
+def get_product_from_cart(product_id, cart_id=1):
+    """Returns full product and its amount in Cart
+       Returns None and amount=0 when product is not in the cart or cart doesn't exist."""
+    try:
+        cart_product = Cart_Product.objects.filter(cart_id__exact=cart_id) \
+                                        .get(product_id__exact=product_id)
+        return get_product_by_id(product_id), cart_product.amount
+    except Cart_Product.DoesNotExist:
+        return None, 0
