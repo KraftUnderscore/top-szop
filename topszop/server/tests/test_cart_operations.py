@@ -7,7 +7,7 @@ class CartTestCase(TestCase):
         product.add_product("Telewizor", "Opis telewizora", 1234.56)
         product.add_product("Pralka", "Opis pralki", 765.43)
         product.add_product("Lodówka", "Opis lodówki", 2631.94)
-        Cart.objects.create(cartID=1)
+        cart.add_cart()
         cart.add_product_to_cart(1, 1) # 1x TV in Cart1
         cart.add_product_to_cart(5, 2) # 5x WM in Cart1
         cart.add_product_to_cart(16, 3) # 16x Fridge in Cart1
@@ -25,7 +25,7 @@ class CartTestCase(TestCase):
     def test_get_all_products_from_empty_cart(self):
         """Check if returns empty lists when Cart is empty"""
 
-        Cart.objects.create(cartID=2)
+        cart.add_cart()
 
         prods, amounts = cart.get_all_products_from_cart(cart_id=2)
 
@@ -51,7 +51,7 @@ class CartTestCase(TestCase):
     def test_set_amount_of_product_in_empty_cart(self):
         """Check if correctly hanldes updates amount of product in empty Cart"""
 
-        Cart.objects.create(cartID=2)
+        cart.add_cart()
         out = cart.set_amount_of_product_in_cart(2, 1, 2)
 
         self.assertFalse(out)

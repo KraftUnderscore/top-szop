@@ -1,6 +1,13 @@
 from server.models import Cart, Cart_Product, Product
 from .product import get_product_by_id
 
+#TODO: Missing add_cart xD
+
+def add_cart():
+    """Adds new Cart to database with incremental ID and the useless cartID is set to 0"""
+
+    Cart.objects.create(cartID=0)
+
 def get_all_products_from_cart(cart_id=1):
     """Returns list of all products and their amounts in the cart in form of a tuple.
        amounts - list of ints
