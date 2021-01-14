@@ -15,15 +15,20 @@ from .database_operations import *
 # in:
 # out: all products in cart
 def my_cart(request):
-    # replace this dictionary with data from database
     context = {
-        'products_list': ['mikrofala', 'lodowka', 'zamrazarka', 'piekarnik']
+        'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
     }
     return render(request, 'server/index.html', context)
+
 
 # 3.1.1 my_cart/change_amount (all products in cart + chosen product)
 # in: productId
 # out: all products in cart with updated product amount
+def change_amount(request):
+    context = {
+        'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+    }
+    return render(request, 'server/change_amount.html', context)
 
 # 3.1.2 my_cart/add_to_cart (no data - display empty page)
 # in:
