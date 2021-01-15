@@ -62,7 +62,7 @@ def add_order(email, cart_id=1):
         if total == 0:
             return False
 
-        date = timezone.now()
+        date = timezone.localtime(timezone.now())
         Order.objects.create(cart_id=cart_id, order_date=date,
                              total_cost=total, email=email)
         return True

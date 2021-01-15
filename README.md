@@ -50,6 +50,12 @@ Generate html report:
 
 ```coverage html```
 
+To generate reports excluding unit tests code use:
+
+```coverage report --omit=.\server\tests\*```
+
+```coverage html --omit=.\server\tests\*```
+
 # Integration with Selenium testing
 
 https://docs.djangoproject.com/pl/3.1/topics/testing/tools/#django.test.LiveServerTestCase
