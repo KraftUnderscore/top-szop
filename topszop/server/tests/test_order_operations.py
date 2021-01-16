@@ -47,6 +47,7 @@ class OrderTestCase(TestCase):
         email = data['email']
 
         self.assertEqual(len(products), 3)
+        self.assertEqual(amounts, [5, 3, 7])
         self.assertAlmostEqual(total_cost, 1234.56 * 5 + 653.12 * 3 + 5944.95 * 7)
         self.assertEqual(email, "admin@admin.com")
 
