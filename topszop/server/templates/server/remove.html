@@ -4,33 +4,30 @@
 {% include "server/partial/header.html" %}
 
 <body>
-	{% include "server/partial/top_bar.html" with page="Usuwanie produktu" %}
+	{% include "server/partial/top_bar.html" with page="Koszyk" %}
 
-    <div>
-        <h1>{{ product_name }}</h1>
-        <p>Obecna ilość: {{ product_amount }}</p>
-        <div style="display: flex;">
-            <p>Wprowadź ilość produktów do usunięcia:</p>
-            <input type="text" id="amount" name="amount">
-        </div>
-    </div>
+	{% if products_list %}
+		<div class="product-box">
+			{% for product, amount in products_list %}
+				<div class="product">
+					<p>{{ product }}</p>
+					<p>Ilość: {{ amount }}</p>
+                    <button type="button">Zmień ilość</button>
+					<button type="button">Usuń</button>
+				</div>
+			{% endfor %}
+		</div>
+	{% else %}
+		<p>Brak produktow w koszyku. Dodaj cos korzystajac z przycisku ponizej :)</p>
+	{% endif %}
 
 	<div id="footer">
-		<button type="button" id="anuluj">Anuluj</button>
-		<button type="button" id="dalej">Dalej</button>
+		<button type="button">Powrót</button>
+		<button type="button">Kup teraz</button>
+		<button type="button">Dodaj...</button>
 	</div>
 
-	<script type="text/javascript">
-		document.getElementById("anuluj").onclick = function() {
-			location.href = "/my_cart";
-		};
-		document.getElementById("dalej").onclick = function() {
-			var inputVal = document.getElementById("amount").value;
-			if (inputVal != "" && inputVal != null) {
-                location.href = "/my_cart/remove?phrase=" + inputVal;
-            }
-		};
-	</script>
+    {% include "server/partial/question_msg.html" with msg="Czy na pewno chcesz usunąć produkt "|add:product_name|add:"?" link_if_yes="/my_cart/remove?name="|add:product_name|add:"&confirm=yes" link_if_no="/my_cart" %}
 </body>
 
 </html>

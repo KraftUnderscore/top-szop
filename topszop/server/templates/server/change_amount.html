@@ -12,12 +12,8 @@
 				<div class="product">
 					<p>{{ product }}</p>
 					<p>Ilość: {{ amount }}</p>
-                    <form action="">
-                        <input type="submit" value="Zmień ilość"/>
-                    </form>
-					<form action="">
-                        <input type="submit" value="Usuń"/>
-                    </form>
+                    <button type="button">Zmień ilość</button>
+					<button type="button">Usuń</button>
 				</div>
 			{% endfor %}
 		</div>
@@ -31,7 +27,7 @@
 		<button type="button">Dodaj...</button>
 	</div>
 
-    {% include "server/partial/amount_editor.html" with product_name="mikrofala" old_amount=20 %}
+    {% include "server/partial/amount_editor.html" with product_name=product_name old_amount=product_old_amount %}
 </body>
 
 </html>

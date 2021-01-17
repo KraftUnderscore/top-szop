@@ -12,18 +12,20 @@
         <button type="button" id="szukaj">Szukaj</button>
     </div>
 
-    {% if products_list %}
-		<div class="product-box">
-			<!-- if product is not a string, replace it with correct calls below -->
-			{% for product, amount in products_list %}
-				<div class="product">
-					<p>{{ product }}</p>
-					<button type="button" id="dodaj">Dodaj do koszyka</button>
-				</div>
-			{% endfor %}
-		</div>
-	{% else %}
-		{% include "server/partial/question_msg.html" with msg="Nie znaleziono niczego" %}
+	{% if products_found is True %}
+		{% if products_list %}
+			<div class="product-box">
+				<!-- if product is not a string, replace it with correct calls below -->
+				{% for product in products_list %}
+					<div class="product">
+						<p>{{ product }}</p>
+						<button type="button" onclick="add_to_cart('{{ product }}')">Dodaj do koszyka</button>
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			{% include "server/partial/info_msg.html" with msg="Nie znaleziono niczego" %}
+		{% endif %}
 	{% endif %}
 
 	<div id="footer">
@@ -42,6 +44,9 @@
                 location.href = "/my_cart/search";
             }
 		};
+		function add_to_cart(product) {
+		  	location.href = "/my_cart/add_to_cart?name=" + product;
+		}
 	</script>
 </body>
 
