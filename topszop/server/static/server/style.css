@@ -19,6 +19,10 @@ button {
     font-size: 25px;
 }
 
+label {
+    float: left;
+}
+
 #nav {
 	width: 100%;
 	float: left;
@@ -65,7 +69,6 @@ button {
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding-top: 10px;
 }
 
 .product {
@@ -75,7 +78,7 @@ button {
     width: 85%;
     height: 15%;
     margin: 10px auto;
-    padding: 20px;
+    padding: 10px;
     border: 1px solid #aaa;
     border-radius: 10px;
 }
@@ -87,7 +90,7 @@ button {
 }
 
 .product p {
-    width: 40%;
+    width: 30%;
 }
 
 .message-box {
@@ -151,5 +154,24 @@ button {
 }
 
 .form-item {
-    
+    width: 100%;
+    padding: 10px;
+    clear: both;
+}
+
+.flex-box {
+    display: flex;
+    padding: 20px 0px;
+}
+
+.flex-column {
+    box-sizing: border-box;
+    width: 45%;
+    margin: auto;
+}
+
+.content {
+    margin: auto;
+    width: 60%;
+    clear: both;
 }

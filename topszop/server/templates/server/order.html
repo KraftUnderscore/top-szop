@@ -6,7 +6,43 @@
 <body>
 	{% include "server/partial/top_bar.html" with page="Składanie zamówienia" %}
 
+	<div class="content">
+		<p style="padding-top: 20px;">Podaj dane potrzebne do zamówienia:</p>
+		<div class="flex-box" style="border-bottom: 1px solid #ccc;">
+			<div class="flex-column">
+				{% include "server/partial/form_item.html" with label="Imię:" input="imie" %}
+				{% include "server/partial/form_item.html" with label="Nazwisko:" input="nazwisko" %}
+				{% include "server/partial/form_item.html" with label="Email:" input="email" %}
+			</div>
+			<div class="flex-column">
+				{% include "server/partial/form_item.html" with label="Ulica:" input="ulica" %}
+				{% include "server/partial/form_item.html" with label="Miasto:" input="miasto" %}
+				{% include "server/partial/form_item.html" with label="Kod pocztowy:" input="kod-pocztowy" %}
+			</div>
+		</div>
 
+		<div class="flex-box">
+			<div class="flex-column">
+				<p>Podsumowanie zamówienia:</p>
+			</div>
+			<div class="flex-column" style="text-align: center">
+				<p>Kwota w sumie: {{ sum }}zł</p>
+			</div>
+		</div>
+
+		{% if products_list %}
+		<div class="product-box">
+			{% for product, amount in products_list %}
+				<div class="product">
+					<p>{{ product }}</p>
+					<p>Ilość: {{ amount }}</p>
+				</div>
+			{% endfor %}
+		</div>
+	{% else %}
+		<p>Brak produktow w koszyku. Dodaj cos korzystajac z przycisku ponizej :)</p>
+	{% endif %}
+	</div>
 
 	<div id="footer">
 		<button type="button" id="anuluj">Anuluj</button>
@@ -14,8 +50,17 @@
 	</div>
 
 	<script type="text/javascript">
-		document.getElementById("dodaj").onclick = function() {
-			location.href = "/my_cart/search";
+		document.getElementById("anuluj").onclick = function() {
+			location.href = "/my_cart";
+		};
+		document.getElementById("dalej").onclick = function() {
+			var req = "/my_cart/order_summary?imie=" + document.getElementById("imie").value;
+			req += "&nazwisko=" + document.getElementById("nazwisko").value;
+			req += "&email=" + document.getElementById("email").value;
+			req += "&ulica=" + document.getElementById("ulica").value;
+			req += "&miasto=" + document.getElementById("miasto").value;
+			req += "&kod_pocztowy=" + document.getElementById("kod-pocztowy").value;
+			location.href = req;
 		};
 	</script>
 </body>

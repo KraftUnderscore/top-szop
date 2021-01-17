@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+{% include "server/partial/header.html" %}
+
+<body>
+	{% include "server/partial/top_bar.html" with page="Składanie zamówienia" %}
+
+	<div class="content">
+		<p style="padding-top: 20px;">Podsumowanie:</p>
+		<div class="flex-box">
+			<div class="flex-column">
+				{% include "server/partial/summary_item.html" with label="Imię:" input=imie %}
+				{% include "server/partial/summary_item.html" with label="Nazwisko:" input=nazwisko %}
+				{% include "server/partial/summary_item.html" with label="Email:" input=email %}
+			</div>
+			<div class="flex-column">
+				{% include "server/partial/summary_item.html" with label="Ulica:" input=ulica %}
+				{% include "server/partial/summary_item.html" with label="Miasto:" input=miasto %}
+				{% include "server/partial/summary_item.html" with label="Kod pocztowy:" input=kod_pocztowy %}
+			</div>
+		</div>
+
+		<div class="flex-box" style="border-bottom: 1px solid #bbb;">
+			<div class="flex-column"></div>
+			<div class="flex-column" style="text-align: center">
+				<p>Kwota w sumie: {{ sum }}zł</p>
+			</div>
+		</div>
+
+        <div class="flex-box">
+			<div class="flex-column" style="border-right: 1px solid #bbb;">
+                <p>Wybierz sposób dostawy:</p>
+				{% include "server/partial/radio_item.html" with id="1" value="Dostawa do domu" name="dostawa" %}
+				{% include "server/partial/radio_item.html" with id="2" value="Dostawa do paczkomatu" name="dostawa" %}
+				{% include "server/partial/radio_item.html" with id="3" value="Odbiór w sklepie" name="dostawa" %}
+			</div>
+			<div class="flex-column">
+                <p>Wybierz sposób płatności:</p>
+				{% include "server/partial/radio_item.html" with id="4" value="Płatność elektroniczna" name="platnosc" %}
+				{% include "server/partial/radio_item.html" with id="5" value="Płatność za pobraniem" name="platnosc" %}
+			</div>
+		</div>
+	</div>
+
+	<div id="footer">
+		<button type="button" id="anuluj">Anuluj</button>
+		<button type="button" id="dalej">Dalej</button>
+	</div>
+
+	<script type="text/javascript">
+		document.getElementById("anuluj").onclick = function() {
+			location.href = "/my_cart";
+		};
+		document.getElementById("dalej").onclick = function() {
+            if (document.getElementById('4').checked) {
+                location.href = "/my_cart/payment";
+            } else {
+			    location.href = "/my_cart";
+			}
+		};
+	</script>
+</body>
+
+</html>

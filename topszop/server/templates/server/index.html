@@ -6,21 +6,23 @@
 <body>
 	{% include "server/partial/top_bar.html" with page="Koszyk" %}
 
-	{% if products_list %}
-		<div class="product-box">
-			<!-- if product is not a string, replace it with correct calls below -->
-			{% for product, amount in products_list %}
-				<div class="product">
-					<p>{{ product }}</p>
-					<p>Ilość: {{ amount }}</p>
-					<button type="button" id="{{ 'amount_'|add:product }}" onclick="change_amount('{{ product }}')">Zmień ilość</button>
-					<button type="button" id="{{ 'remove_'|add:product }}" onclick="remove('{{ product }}')">Usuń</button>
-				</div>
-			{% endfor %}
-		</div>
-	{% else %}
-		<p>Brak produktow w koszyku. Dodaj cos korzystajac z przycisku ponizej :)</p>
-	{% endif %}
+	<div class="content">
+		{% if products_list %}
+			<div class="product-box">
+				<!-- if product is not a string, replace it with correct calls below -->
+				{% for product, amount in products_list %}
+					<div class="product">
+						<p>{{ product }}</p>
+						<p>Ilość: {{ amount }}</p>
+						<button type="button" id="{{ 'amount_'|add:product }}" onclick="change_amount('{{ product }}')">Zmień ilość</button>
+						<button type="button" id="{{ 'remove_'|add:product }}" onclick="remove('{{ product }}')">Usuń</button>
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<p>Brak produktow w koszyku. Dodaj cos korzystajac z przycisku ponizej :)</p>
+		{% endif %}
+	</div>
 
 	<div id="footer">
 		<button type="button">Powrót</button>

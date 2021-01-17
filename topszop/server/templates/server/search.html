@@ -12,21 +12,23 @@
         <button type="button" id="szukaj">Szukaj</button>
     </div>
 
-	{% if products_found is True %}
-		{% if products_list %}
-			<div class="product-box">
-				<!-- if product is not a string, replace it with correct calls below -->
-				{% for product in products_list %}
-					<div class="product">
-						<p>{{ product }}</p>
-						<button type="button" onclick="add_to_cart('{{ product }}')">Dodaj do koszyka</button>
-					</div>
-				{% endfor %}
-			</div>
-		{% else %}
-			{% include "server/partial/info_msg.html" with msg="Nie znaleziono niczego" link="/my_cart/search" %}
+	<div class="content">
+		{% if products_found is True %}
+			{% if products_list %}
+				<div class="product-box">
+					<!-- if product is not a string, replace it with correct calls below -->
+					{% for product in products_list %}
+						<div class="product">
+							<p>{{ product }}</p>
+							<button type="button" onclick="add_to_cart('{{ product }}')">Dodaj do koszyka</button>
+						</div>
+					{% endfor %}
+				</div>
+			{% else %}
+				{% include "server/partial/info_msg.html" with msg="Nie znaleziono niczego" link="/my_cart/search" %}
+			{% endif %}
 		{% endif %}
-	{% endif %}
+	</div>
 
 	<div id="footer">
 		<button type="button" id="anuluj">Anuluj</button>
