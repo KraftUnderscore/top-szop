@@ -27,7 +27,7 @@
 		<button type="button">Dodaj...</button>
 	</div>
 
-    {% include "server/partial/question_msg.html" with msg="Czy na pewno chcesz usunąć produkt "|add:product_name|add:"?" link_if_yes="/my_cart/remove?name="|add:product_name|add:"&confirm=yes" link_if_no="/my_cart" %}
+    {% include "server/partial/question_msg.html" with msg="Czy na pewno chcesz usunąć produkt "|add:product_name|add:"?" link_if_yes="/my_cart/remove?name="|add:product_name|add:"amp;confirm=yes" link_if_no="/my_cart" %}
 </body>
 
 </html>

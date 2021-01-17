@@ -85,13 +85,18 @@ def search(request):
 # out: remove amount of product from cart, return all products in cart
 def remove(request):
     name = request.GET.get('name', '')
+    confirm = request.GET.get('confirm', '')
 
-    context = {
-        'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
-        'product_name': name,
-    }
+    if confirm != '':
+        # remove product from database
+        return my_cart(None)
+    else:
+        context = {
+            'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+            'product_name': name,
+        }
 
-    return render(request, 'server/remove.html', context)
+        return render(request, 'server/remove.html', context)
 
 
 # 3.1.4 my_cart/order
