@@ -66,7 +66,6 @@ class CartTestCase(TestCase):
         self.assertEqual(amount, 7)
         self.assertEqual(prod.name, "Monitor")
 
-
     def test_add_incorrect_product_to_cart(self):
         """Check if responds correctly to adding a non-existent product to Cart"""
 
@@ -110,5 +109,29 @@ class CartTestCase(TestCase):
         """Check if responds correctly to removing a product from non-existent Cart"""
 
         out = cart.remove_product_from_cart(1, 100)
+
+        self.assertFalse(out)
+
+    def test_remove_product_from_cart_by_name(self):
+        """Check if correctly removes product from Cart"""
+
+        out = cart.remove_product_from_cart_by_name("Telewizor")
+        prod, amount = cart.get_product_from_cart(1)
+
+        self.assertTrue(out)
+        self.assertEqual(amount, 0)
+        self.assertIsNone(prod)
+
+    def test_remove_incorrect_product_from_cart_by_name(self):
+        """Check if responds correctly to removing a non-existent product from Cart"""
+
+        out = cart.remove_product_from_cart_by_name("Czekolada")
+
+        self.assertFalse(out)
+
+    def test_remove_product_from_empty_cart_by_name(self):
+        """Check if responds correctly to removing a product from non-existent Cart"""
+
+        out = cart.remove_product_from_cart_by_name("Telewizor", 100)
 
         self.assertFalse(out)

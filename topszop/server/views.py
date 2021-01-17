@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 
-from .database_operations import *
-
+from .database_operations import \
+    order as order_op, \
+    cart as cart_op, \
+    product as product_op, \
+    discount as discount_op, \
+    delivery as delivery_op
 
 # My proposition for interface between Templates and backend:
 # <interface number> url path/ subpath, ex. for 3.1.2 localhost:8000/my_cart/search
@@ -15,7 +19,7 @@ from .database_operations import *
 # in:
 # out: all products in cart
 def my_cart(request):
-    products = cart.get_all_products_from_cart()
+    products = cart_op.get_all_products_from_cart()
     context = {
         'products_list': products,
     }
@@ -30,10 +34,10 @@ def change_amount(request):
     amount = request.GET.get('amount', '')
 
     if amount != '':
-        cart.set_amount_of_product_in_cart(amount, name)
+        cart_op.set_amount_of_product_in_cart(amount, name)
         return my_cart(None)
 
-    products = cart.get_all_products_from_cart()
+    products = cart_op.get_all_products_from_cart()
 
     old_amount = 0
     for prod in products:
@@ -45,7 +49,7 @@ def change_amount(request):
         'product_old_amount': old_amount,
         'product_name': name
     }
-    print(context)
+
     return render(request, 'server/change_amount.html', context)
 
 
@@ -54,7 +58,7 @@ def change_amount(request):
 # out: product added to database
 def add_to_cart(request):
     name = request.GET.get('name', '')
-    cart.add_product_to_cart(1, name)
+    cart_op.add_product_to_cart(1, name)
     return my_cart(None)
 
 
@@ -68,7 +72,7 @@ def search(request):
             'products_found': False,
         }
     else:
-        results = product.get_products_from_search(param)
+        results = product_op.get_products_from_search(param)
         products_list = []
         for r in results:
             products_list.append(r.name)
@@ -88,11 +92,12 @@ def remove(request):
     confirm = request.GET.get('confirm', '')
 
     if confirm != '':
-        # remove product from database
+        cart_op.remove_product_from_cart_by_name(name[:-3])
         return my_cart(None)
     else:
+        products = cart_op.get_all_products_from_cart()
         context = {
-            'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+            'products_list': products,
             'product_name': name,
         }
 
@@ -103,9 +108,12 @@ def remove(request):
 # in:
 # out: all products in cart
 def order(request):
+    products = cart_op.get_all_products_from_cart()
+    total = order_op.calculate_total_cost()
+
     context = {
-        'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
-        'sum': 20,
+        'products_list': products,
+        'sum': total,
     }
     return render(request, 'server/order.html', context)
 
@@ -115,13 +123,19 @@ def order(request):
 # out: add order to database, return order data
 def order_summary(request):
     data = {}
+    address = ""
 
     for key in request.GET:
         data[key] = request.GET.get(key, '')
+        address+=f"{data[key]};"
+
+    delivery_op.add_delivery(1, address[:-1])
+    products = cart_op.get_all_products_from_cart()
+    total = order_op.calculate_total_cost()
 
     context = data
-    context['products_list'] = [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]]
-    context['sum'] = 20
+    context['products_list'] = products
+    context['sum'] = total
 
     return render(request, 'server/order_summary.html', context)
 

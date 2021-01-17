@@ -58,6 +58,17 @@ def add_product_to_cart(amount, product_name, cart_id=1):
 
     return True
 
+def remove_product_from_cart_by_name(name, cart_id=1):
+    """Remove Cart_Product with matching product name and cart_id <=> remove Product from Cart
+       Returns True on success and False on failure."""
+
+    product = get_product_by_name(name)
+
+    if not product:
+        return False
+
+    return remove_product_from_cart(product.id, cart_id)
+
 def remove_product_from_cart(product_id, cart_id=1):
     """Remove Cart_Product with matching product_id and cart_id <=> remove Product from Cart
        Returns True on success and False on failure."""

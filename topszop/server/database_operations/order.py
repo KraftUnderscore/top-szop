@@ -24,7 +24,7 @@ def get_order_data(order_id=1):
         'email' : order.email
     }
 
-def calculate_total_cost(cart_id):
+def calculate_total_cost(cart_id=1):
     """Database querry to calculate total cost for Cart with cart_id"""
 
     total = 0
