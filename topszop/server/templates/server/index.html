@@ -24,13 +24,16 @@
 
 	<div id="footer">
 		<button type="button">Powrót</button>
-		<button type="button">Kup teraz</button>
+		<button type="button" id="zamow">Kup teraz</button>
 		<button type="button" id="dodaj">Dodaj...</button>
 	</div>
 
 	<script type="text/javascript">
 		document.getElementById("dodaj").onclick = function() {
 			location.href = "/my_cart/search";
+		};
+		document.getElementById("zamow").onclick = function() {
+			location.href = "/my_cart/order";
 		};
 
 		function change_amount(product) {
