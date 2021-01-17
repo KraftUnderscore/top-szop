@@ -25,6 +25,16 @@ def get_product_by_id(product_id):
         match = None
     return match
 
+def get_product_by_name(product_name):
+    """Returns models.Product by matching product_id
+       and returns None when no match found"""
+
+    try:
+        match = Product.objects.get(name__exact=product_name)
+    except Product.DoesNotExist:
+        match = None
+    return match
+
 def get_product_duplicate(querry):
     """Find product which name matches the querry.
        Returns models.Product of found duplicate"""

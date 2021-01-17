@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 from .database_operations import *
 
@@ -15,8 +15,9 @@ from .database_operations import *
 # in:
 # out: all products in cart
 def my_cart(request):
+    products = cart.get_all_products_from_cart()
     context = {
-        'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+        'products_list': products,
     }
     return render(request, 'server/index.html', context)
 
@@ -29,15 +30,23 @@ def change_amount(request):
     amount = request.GET.get('amount', '')
 
     if amount != '':
-        # update amount to database
+        cart.set_amount_of_product_in_cart(amount, name)
         return my_cart(None)
-    else:
-        context = {
-            'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
-            'product_old_amount': 10,
-            'product_name': name,
-        }
-        return render(request, 'server/change_amount.html', context)
+
+    products = cart.get_all_products_from_cart()
+
+    old_amount = 0
+    for prod in products:
+        if prod[0] == name:
+            old_amount = prod[1]
+
+    context = {
+        'products_list': products,
+        'product_old_amount': old_amount,
+        'product_name': name
+    }
+    print(context)
+    return render(request, 'server/change_amount.html', context)
 
 
 # 3.1.2 my_cart/add_to_cart (adds product to cart)
@@ -59,8 +68,12 @@ def search(request):
             'products_found': False,
         }
     else:
+        results = product.get_products_from_search(param)
+        products_list = []
+        for r in results:
+            products_list.append(r.name)
         context = {
-            'products_list': ['mikrofala', 'lodowka', 'zamrazarka', 'piekarnik'],
+            'products_list': products_list,
             'products_found': True,
         }
 

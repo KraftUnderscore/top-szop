@@ -25,7 +25,7 @@ class Discount_Product(models.Model):
         return f"{self.product} {self.discount}"
 
 class Cart(models.Model):
-    cartID = models.IntegerField()
+    cartID = models.IntegerField() # Igore this field, it's not used and it's here not to break the DataBase
 
 class Cart_Product(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.DO_NOTHING)
