@@ -175,3 +175,14 @@ label {
     width: 60%;
     clear: both;
 }
+
+.panel {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #aaa;
+}
+
+.panel button {
+    width: 90%;
+    margin: 15px 5%;
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+{% include "server/partial/header.html" %}
+
+<body>
+	{% include "server/partial/top_bar.html" with page="Panel kierownika" %}
+
+	<div class="content">
+		{% include "server/partial/panel_kierownika.html" %}
+
+        <div class="panel">
+            <button type="button">Zarządzanie kontami</button>
+            <button type="button" id="modyfikuj">Modyfikacja katalogu produktów</button>
+            <button type="button" id="dodaj">Dodaj promocję programu lojalnościowego</button>
+        </div>
+	</div>
+
+	<script type="text/javascript">
+		document.getElementById("modyfikuj").onclick = function() {
+			location.href = "/my_cart/search";
+		};
+		document.getElementById("dodaj").onclick = function() {
+			location.href = "/my_cart/order";
+		};
+	</script>
+</body>
+
+</html>
