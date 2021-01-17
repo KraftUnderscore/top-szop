@@ -25,8 +25,16 @@ def my_cart(request):
 # in: productId
 # out: all products in cart with updated product amount
 def change_amount(request):
+    id = request.GET.get('id', '')
+    amount = request.GET.get('amount', '')
+
+    if amount != '':
+        return my_cart(None)
     context = {
         'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+        'product_id': 1,
+        'product_old_amount': 10,
+        'product_name': 'mikrofala'
     }
     return render(request, 'server/change_amount.html', context)
 
@@ -36,7 +44,8 @@ def change_amount(request):
 # out:
 def add_to_cart(request):
     context = {}
-    return render(request, 'server/add_to_cart.html', context)
+
+    return render(request, 'server/index.html', context)
 
 
 # 3.1.2 my_cart/search (product matching name)

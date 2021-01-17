@@ -13,12 +13,8 @@
 				<div class="product">
 					<p>{{ product }}</p>
 					<p>Ilość: {{ amount }}</p>
-					<form action="/my_cart/change_amount">
-                        <input type="submit" value="Zmień ilość"/>
-                    </form>
-					<form action="/my_cart/remove">
-                        <input type="submit" value="Usuń"/>
-                    </form>
+					<button type="button" id="{{ 'amount_'|add:product }}" onclick="change_amount('{{ product }}')">Zmień ilość</button>
+					<button type="button" id="{{ 'remove_'|add:product }}" onclick="remove('{{ product }}')">Usuń</button>
 				</div>
 			{% endfor %}
 		</div>
@@ -36,6 +32,13 @@
 		document.getElementById("dodaj").onclick = function() {
 			location.href = "/my_cart/search";
 		};
+
+		function change_amount(product) {
+		  	location.href = "/my_cart/change_amount?id=" + product;
+		}
+		function remove(product) {
+		  	location.href = "/my_cart/remove?id=" + product;
+		}
 	</script>
 </body>
 

@@ -22,6 +22,8 @@
 				</div>
 			{% endfor %}
 		</div>
+	{% else %}
+		{% include "server/partial/question_msg.html" with msg="Nie znaleziono niczego" %}
 	{% endif %}
 
 	<div id="footer">
