@@ -16,7 +16,7 @@
 					<form action="/my_cart/change_amount">
                         <input type="submit" value="Zmień ilość"/>
                     </form>
-					<form action="">
+					<form action="/my_cart/remove">
                         <input type="submit" value="Usuń"/>
                     </form>
 				</div>
@@ -29,8 +29,14 @@
 	<div id="footer">
 		<button type="button">Powrót</button>
 		<button type="button">Kup teraz</button>
-		<button type="button">Dodaj...</button>
+		<button type="button" id="dodaj">Dodaj...</button>
 	</div>
+
+	<script type="text/javascript">
+		document.getElementById("dodaj").onclick = function() {
+			location.href = "/my_cart/search";
+		};
+	</script>
 </body>
 
 </html>

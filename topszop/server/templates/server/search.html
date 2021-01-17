@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+{% include "server/partial/header.html" %}
+
+<body>
+	{% include "server/partial/top_bar.html" with page="Dodawanie produktu" %}
+
+	<div id="search-bar">
+        <p>Podaj frazę do wyszukania:</p>
+        <input type="text" id="fraza" name="fraza">
+        <button type="button" id="szukaj">Szukaj</button>
+    </div>
+
+    {% if products_list %}
+		<div class="product-box">
+			<!-- if product is not a string, replace it with correct calls below -->
+			{% for product, amount in products_list %}
+				<div class="product">
+					<p>{{ product }}</p>
+					<button type="button" id="dodaj">Dodaj do koszyka</button>
+				</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+
+	<div id="footer">
+		<button type="button" id="anuluj">Anuluj</button>
+	</div>
+
+    <script type="text/javascript">
+		document.getElementById("anuluj").onclick = function() {
+			location.href = "/my_cart";
+		};
+		document.getElementById("szukaj").onclick = function() {
+			var inputVal = document.getElementById("fraza").value;
+			if (inputVal != "" && inputVal != null) {
+                location.href = "/my_cart/search?phrase=" + inputVal;
+            } else {
+                location.href = "/my_cart/search";
+            }
+		};
+	</script>
+</body>
+
+</html>

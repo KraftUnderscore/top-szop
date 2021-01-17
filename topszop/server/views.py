@@ -30,13 +30,28 @@ def change_amount(request):
     }
     return render(request, 'server/change_amount.html', context)
 
+
 # 3.1.2 my_cart/add_to_cart (no data - display empty page)
 # in:
 # out:
+def add_to_cart(request):
+    context = {}
+    return render(request, 'server/add_to_cart.html', context)
+
 
 # 3.1.2 my_cart/search (product matching name)
 # in: name
 # out: products matching name
+def search(request):
+    param = request.GET.get('phrase', '')
+    if param == '':
+        context = {}
+    else:
+        context = {
+            'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+        }
+    return render(request, 'server/search.html', context)
+
 
 # 3.1.2 my_cart/add_to_cart
 # in: name
@@ -45,10 +60,22 @@ def change_amount(request):
 # 3.1.3 my_cart/remove
 # in: productId, amount to decrease
 # out: remove amount of product from cart, return all products in cart
+def remove(request):
+    context = {
+        'product_name': "mikrofala",
+        'product_amount': 20,
+    }
+    return render(request, 'server/remove.html', context)
+
 
 # 3.1.4 my_cart/order
 # in:
 # out: all products in cart
+def order(request):
+    context = {
+        'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+    }
+    return render(request, 'server/order.html', context)
 
 # 3.1.4 my_cart/order_summary
 # in: order data

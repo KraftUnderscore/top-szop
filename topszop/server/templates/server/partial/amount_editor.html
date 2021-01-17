@@ -1,4 +1,27 @@
-<div class="message-box">
-    <p>{{ product_name }}</p>
-    <p>Stara wartość: {{ old_amount }}</p>
+<div class="message-box center">
+    <div class="message-quarter">
+        <h2>{{ product_name }}</h2>
+    </div>
+    <div class="message-quarter">
+        <h3>Stara wartość: {{ old_amount }}</h3>
+    </div>
+    <div class="message-quarter message-flex">
+        <h3>Wprowadź nową wartość: </h3>
+        <input type="text" id="fname" name="fname">
+    </div>
+    <div class="message-quarter message-flex">
+        <button type="button" id="dalej">Dalej</button>
+        <button type="button" id="powrot">Powrót</button>
+    </div>
 </div>
+<div class="overlay"></div>
+
+<script type="text/javascript">
+    document.getElementById("powrot").onclick = function() {
+        location.href = "/my_cart";
+    };
+    document.getElementById("dalej").onclick = function() {
+        var inputVal = document.getElementById("fname").value;
+        alert('/my_cart/change_amount/' + inputVal);
+    };
+</script>
