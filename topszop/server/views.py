@@ -15,23 +15,52 @@ from .database_operations import *
 # in:
 # out: all products in cart
 def my_cart(request):
-    # replace this dictionary with data from database
     context = {
-        'products_list': ['mikrofala', 'lodowka', 'zamrazarka', 'piekarnik']
+        'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
     }
     return render(request, 'server/index.html', context)
+
 
 # 3.1.1 my_cart/change_amount (all products in cart + chosen product)
 # in: productId
 # out: all products in cart with updated product amount
+def change_amount(request):
+    id = request.GET.get('id', '')
+    amount = request.GET.get('amount', '')
+
+    if amount != '':
+        return my_cart(None)
+    context = {
+        'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+        'product_id': 1,
+        'product_old_amount': 10,
+        'product_name': 'mikrofala'
+    }
+    return render(request, 'server/change_amount.html', context)
+
 
 # 3.1.2 my_cart/add_to_cart (no data - display empty page)
 # in:
 # out:
+def add_to_cart(request):
+    context = {}
+
+    return render(request, 'server/index.html', context)
+
 
 # 3.1.2 my_cart/search (product matching name)
 # in: name
 # out: products matching name
+def search(request):
+    param = request.GET.get('phrase', '')
+    if param == '':
+        context = {}
+    else:
+        context = {
+            'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+        }
+    return render(request, 'server/search.html', context)
+
 
 # 3.1.2 my_cart/add_to_cart
 # in: name
@@ -40,10 +69,22 @@ def my_cart(request):
 # 3.1.3 my_cart/remove
 # in: productId, amount to decrease
 # out: remove amount of product from cart, return all products in cart
+def remove(request):
+    context = {
+        'product_name': "mikrofala",
+        'product_amount': 20,
+    }
+    return render(request, 'server/remove.html', context)
+
 
 # 3.1.4 my_cart/order
 # in:
 # out: all products in cart
+def order(request):
+    context = {
+        'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+    }
+    return render(request, 'server/order.html', context)
 
 # 3.1.4 my_cart/order_summary
 # in: order data

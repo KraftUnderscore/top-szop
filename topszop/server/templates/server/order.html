@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+{% include "server/partial/header.html" %}
+
+<body>
+	{% include "server/partial/top_bar.html" with page="Składanie zamówienia" %}
+
+
+
+	<div id="footer">
+		<button type="button" id="anuluj">Anuluj</button>
+		<button type="button" id="dalej">Dalej</button>
+	</div>
+
+	<script type="text/javascript">
+		document.getElementById("dodaj").onclick = function() {
+			location.href = "/my_cart/search";
+		};
+	</script>
+</body>
+
+</html>

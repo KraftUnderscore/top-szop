@@ -1,0 +1,31 @@
+<div class="message-box center">
+    <div class="message-quarter">
+        <h2>{{ product_name }}</h2>
+    </div>
+    <div class="message-quarter">
+        <h3>Stara wartość: {{ product_old_amount }}</h3>
+    </div>
+    <div class="message-quarter message-flex">
+        <h3>Wprowadź nową wartość: </h3>
+        <input type="number" id="fname" name="fname">
+    </div>
+    <div class="message-quarter message-flex">
+        <button type="button" id="dalej">Dalej</button>
+        <button type="button" id="powrot">Powrót</button>
+    </div>
+</div>
+<div class="overlay"></div>
+
+<script type="text/javascript">
+    document.getElementById("powrot").onclick = function() {
+        location.href = "/my_cart";
+    };
+    document.getElementById("dalej").onclick = function() {
+        var inputVal = document.getElementById("fname").value;
+        if (inputVal > 0) {
+            location.href = '/my_cart/change_amount?amount=' + inputVal + '&id=' + {{ product_id }};
+        } else {
+            alert("Niepoprawna ilość!");
+        }
+    };
+</script>

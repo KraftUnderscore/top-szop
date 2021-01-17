@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+{% include "server/partial/header.html" %}
+
+<body>
+	{% include "server/partial/top_bar.html" with page="Usuwanie produktu" %}
+
+    <div>
+        <h1>{{ product_name }}</h1>
+        <p>Obecna ilość: {{ product_amount }}</p>
+        <div style="display: flex;">
+            <p>Wprowadź ilość produktów do usunięcia:</p>
+            <input type="text" id="amount" name="amount">
+        </div>
+    </div>
+
+	<div id="footer">
+		<button type="button" id="anuluj">Anuluj</button>
+		<button type="button" id="dalej">Dalej</button>
+	</div>
+
+	<script type="text/javascript">
+		document.getElementById("anuluj").onclick = function() {
+			location.href = "/my_cart";
+		};
+		document.getElementById("dalej").onclick = function() {
+			var inputVal = document.getElementById("amount").value;
+			if (inputVal != "" && inputVal != null) {
+                location.href = "/my_cart/remove?phrase=" + inputVal;
+            }
+		};
+	</script>
+</body>
+
+</html>
