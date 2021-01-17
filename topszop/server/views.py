@@ -54,7 +54,7 @@ def change_amount(request):
 # out: product added to database
 def add_to_cart(request):
     name = request.GET.get('name', '')
-
+    cart.add_product_to_cart(1, name)
     return my_cart(None)
 
 

@@ -7,7 +7,7 @@ class ModelsTestCase(TestCase):
     def setUp(self):
         product.add_product("Produkt", "Opis", 123.45)
         cart.add_cart()
-        cart.add_product_to_cart(2, 1)
+        cart.add_product_to_cart(2, "Produkt")
         order.add_order("admin@admin.com")
         discount.add_discount("2022-01-01 10:00:00", "2022-02-01 10:00:00", 50.00, 100)
         discount.add_product_to_discount(1, 1)

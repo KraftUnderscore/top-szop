@@ -8,9 +8,9 @@ class OrderTestCase(TestCase):
         product.add_product("Telewizor", "Opis telewizora", 1234.56)
         product.add_product("Aparat", "Opis aparatu", 653.12)
         product.add_product("Komputer", "Opis komputera", 5944.95)
-        cart.add_product_to_cart(5, 1)
-        cart.add_product_to_cart(3, 2)
-        cart.add_product_to_cart(7, 3)
+        cart.add_product_to_cart(5, "Telewizor")
+        cart.add_product_to_cart(3, "Aparat")
+        cart.add_product_to_cart(7, "Komputer")
         order.add_order("admin@admin.com")
 
     def test_add_order_empty_cart(self):

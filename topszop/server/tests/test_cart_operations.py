@@ -8,9 +8,9 @@ class CartTestCase(TestCase):
         product.add_product("Pralka", "Opis pralki", 765.43)
         product.add_product("Lodówka", "Opis lodówki", 2631.94)
         cart.add_cart()
-        cart.add_product_to_cart(1, 1) # 1x TV in Cart1
-        cart.add_product_to_cart(5, 2) # 5x WM in Cart1
-        cart.add_product_to_cart(16, 3) # 16x Fridge in Cart1
+        cart.add_product_to_cart(1, "Telewizor") # 1x TV in Cart1
+        cart.add_product_to_cart(5, "Pralka") # 5x WM in Cart1
+        cart.add_product_to_cart(16, "Lodówka") # 16x Fridge in Cart1
 
     def test_get_all_products_from_cart(self):
         """Check if correctly gets all products from Cart"""
@@ -59,7 +59,7 @@ class CartTestCase(TestCase):
         """Check if correctly adds product to Cart"""
 
         product.add_product("Monitor", "Opis monitora", 777.77)
-        out = cart.add_product_to_cart(7, 4)
+        out = cart.add_product_to_cart(7, "Monitor")
         prod, amount = cart.get_product_from_cart(4)
 
         self.assertTrue(out)
@@ -70,7 +70,14 @@ class CartTestCase(TestCase):
     def test_add_incorrect_product_to_cart(self):
         """Check if responds correctly to adding a non-existent product to Cart"""
 
-        out = cart.add_product_to_cart(7, 4)
+        out = cart.add_product_to_cart(7, "Czekolada")
+
+        self.assertFalse(out)
+
+    def test_add_duplicate_product_to_cart(self):
+        """Check if responds correctly to adding a duplicate product to Cart"""
+
+        out = cart.add_product_to_cart(7, "Telewizor")
 
         self.assertFalse(out)
 

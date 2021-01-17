@@ -37,11 +37,12 @@ def set_amount_of_product_in_cart(amount, product_name, cart_id=1):
                               .update(amount=amount)
     return True if num > 0 else False
 
-def add_product_to_cart(amount, product_id, cart_id=1):
-    """Add amount of new Product with product_id to Cart with cart_id
+def add_product_to_cart(amount, product_name, cart_id=1):
+    """Add amount of new Product with product_name to Cart with cart_id
        Returns True on success and False on failure."""
 
-    if not get_product_by_id(product_id):
+    product = get_product_by_name(product_name)
+    if not product:
         return False
 
     try:
@@ -49,7 +50,12 @@ def add_product_to_cart(amount, product_id, cart_id=1):
     except Cart.DoesNotExist:
         return False
 
-    Cart_Product.objects.create(cart_id=cart_id, product_id=product_id, amount=amount)
+    if Cart_Product.objects.filter(cart_id=cart_id) \
+                           .filter(product_id=product.id).exists():
+        return False
+
+    Cart_Product.objects.create(cart_id=cart_id, product_id=product.id, amount=amount)
+
     return True
 
 def remove_product_from_cart(product_id, cart_id=1):
