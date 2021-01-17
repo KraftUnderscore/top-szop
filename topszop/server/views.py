@@ -25,27 +25,28 @@ def my_cart(request):
 # in: productId
 # out: all products in cart with updated product amount
 def change_amount(request):
-    id = request.GET.get('id', '')
+    name = request.GET.get('name', '')
     amount = request.GET.get('amount', '')
 
     if amount != '':
+        # update amount to database
         return my_cart(None)
-    context = {
-        'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
-        'product_id': 1,
-        'product_old_amount': 10,
-        'product_name': 'mikrofala'
-    }
-    return render(request, 'server/change_amount.html', context)
+    else:
+        context = {
+            'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+            'product_old_amount': 10,
+            'product_name': name,
+        }
+        return render(request, 'server/change_amount.html', context)
 
 
-# 3.1.2 my_cart/add_to_cart (no data - display empty page)
-# in:
-# out:
+# 3.1.2 my_cart/add_to_cart (adds product to cart)
+# in: product id
+# out: product added to database
 def add_to_cart(request):
-    context = {}
+    name = request.GET.get('name', '')
 
-    return render(request, 'server/index.html', context)
+    return my_cart(None)
 
 
 # 3.1.2 my_cart/search (product matching name)
@@ -54,26 +55,30 @@ def add_to_cart(request):
 def search(request):
     param = request.GET.get('phrase', '')
     if param == '':
-        context = {}
-    else:
         context = {
-            'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+            'products_found': False,
         }
+    else:
+        # [product_name]
+        context = {
+            'products_list': ['mikrofala', 'lodowka', 'zamrazarka', 'piekarnik'],
+            'products_found': True,
+        }
+
     return render(request, 'server/search.html', context)
 
-
-# 3.1.2 my_cart/add_to_cart
-# in: name
-# out: product added to database
 
 # 3.1.3 my_cart/remove
 # in: productId, amount to decrease
 # out: remove amount of product from cart, return all products in cart
 def remove(request):
+    name = request.GET.get('name', '')
+
     context = {
-        'product_name': "mikrofala",
-        'product_amount': 20,
+        'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+        'product_name': name,
     }
+
     return render(request, 'server/remove.html', context)
 
 
