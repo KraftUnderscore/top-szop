@@ -59,7 +59,6 @@ def search(request):
             'products_found': False,
         }
     else:
-        # [product_name]
         context = {
             'products_list': ['mikrofala', 'lodowka', 'zamrazarka', 'piekarnik'],
             'products_found': True,

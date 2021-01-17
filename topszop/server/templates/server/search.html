@@ -24,7 +24,7 @@
 				{% endfor %}
 			</div>
 		{% else %}
-			{% include "server/partial/info_msg.html" with msg="Nie znaleziono niczego" %}
+			{% include "server/partial/info_msg.html" with msg="Nie znaleziono niczego" link="/my_cart/search" %}
 		{% endif %}
 	{% endif %}
 
