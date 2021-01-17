@@ -18,8 +18,7 @@ def get_order_data(order_id=1):
 
     products = get_all_products_from_cart(order.cart_id)
     return {
-        'products' : products[0],
-        'amounts' : products[1],
+        'products' : products,
         'order_date' : order.order_date,
         'total_cost' : float(order.total_cost),
         'email' : order.email

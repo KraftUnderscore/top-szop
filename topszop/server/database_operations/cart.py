@@ -1,5 +1,5 @@
 from server.models import Cart, Cart_Product, Product
-from .product import get_product_by_id
+from .product import get_product_by_id, get_product_by_name
 
 def add_cart():
     """Adds new Cart to database with incremental ID and the useless cartID is set to 0"""
@@ -15,25 +15,25 @@ def cart_exist(cart_id):
 
 def get_all_products_from_cart(cart_id=1):
     """Returns list of all products and their amounts in the cart in form of a tuple.
-       amounts - list of ints
-       products - list of models.Product"""
+       [(product.name, amount)]"""
 
     products = []
-    amounts = []
 
     cart_products = Cart_Product.objects.filter(cart_id__exact=cart_id)
     for cart_product in cart_products:
-        products.append(get_product_by_id(cart_product.product_id))
-        amounts.append(cart_product.amount)
+        products.append((get_product_by_id(cart_product.product_id).name, cart_product.amount))
+    return products
 
-    return products, amounts
-
-def set_amount_of_product_in_cart(amount, product_id, cart_id=1):
+def set_amount_of_product_in_cart(amount, product_name, cart_id=1):
     """Find Cart by cart_id, find Product by product_id and set its amount to amount.
        Returns True on success and False on failure."""
 
+    product = get_product_by_name(product_name)
+    if not product:
+        return False
+
     num = Cart_Product.objects.filter(cart_id__exact=cart_id) \
-                              .filter(product_id__exact=product_id) \
+                              .filter(product_id__exact=product.id) \
                               .update(amount=amount)
     return True if num > 0 else False
 

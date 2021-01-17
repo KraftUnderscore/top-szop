@@ -15,27 +15,26 @@ class CartTestCase(TestCase):
     def test_get_all_products_from_cart(self):
         """Check if correctly gets all products from Cart"""
 
-        prods, amounts = cart.get_all_products_from_cart()
+        prods = cart.get_all_products_from_cart()
 
         self.assertEqual(len(prods), 3)
-        self.assertEqual(prods[0].name, "Telewizor")
-        self.assertEqual(prods[1].name, "Pralka")
-        self.assertEqual(prods[2].name, "Lodówka")
+        self.assertEqual(prods[0][0], "Telewizor")
+        self.assertEqual(prods[1][0], "Pralka")
+        self.assertEqual(prods[2][0], "Lodówka")
 
     def test_get_all_products_from_empty_cart(self):
         """Check if returns empty lists when Cart is empty"""
 
         cart.add_cart()
 
-        prods, amounts = cart.get_all_products_from_cart(cart_id=2)
+        prods = cart.get_all_products_from_cart(cart_id=2)
 
         self.assertEqual(len(prods), 0)
-        self.assertEqual(len(amounts), 0)
 
     def test_set_amount_of_product_in_cart(self):
         """Check if correctly updates amount of product in Cart"""
 
-        out = cart.set_amount_of_product_in_cart(2, 1)
+        out = cart.set_amount_of_product_in_cart(2, "Telewizor")
         prod, amount = cart.get_product_from_cart(1)
 
         self.assertEqual(amount, 2)
@@ -52,7 +51,7 @@ class CartTestCase(TestCase):
         """Check if correctly hanldes updates amount of product in empty Cart"""
 
         cart.add_cart()
-        out = cart.set_amount_of_product_in_cart(2, 1, 2)
+        out = cart.set_amount_of_product_in_cart(2, "Telewizor", 2)
 
         self.assertFalse(out)
 
