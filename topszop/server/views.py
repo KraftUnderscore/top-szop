@@ -105,16 +105,47 @@ def remove(request):
 def order(request):
     context = {
         'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+        'sum': 20,
     }
     return render(request, 'server/order.html', context)
+
 
 # 3.1.4 my_cart/order_summary
 # in: order data
 # out: add order to database, return order data
+def order_summary(request):
+    context = {
+        'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
+        'sum': 20,
+        'imie': 'dawid',
+        'nazwisko': 'bilinski',
+        'email': 'dawid.bilinski@gmail.com',
+        'ulica': 'Kwiatkowa',
+        'miasto': 'Wrocław',
+        'kod_pocztowy': '58-230',
+    }
+    return render(request, 'server/order_summary.html', context)
+
 
 # 3.1.5 my_cart/payment
 # in:
 # out: (just make a random function in the Template that displays success/ failed xD)
+def payment(request):
+    status = request.GET.get('status', '')
+
+    if status == 'yes':
+        context = {
+            'message': 'Operacja zakończona sukcesem',
+        }
+    elif status == 'no':
+        context = {
+            'message': 'Przepraszamy, operacja zakończona niepowodzeniem',
+        }
+    else:
+        context = {}
+
+    return render(request, 'server/payment.html', context)
+
 
 # 3.1.6 manager/panel
 # in:
