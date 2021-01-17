@@ -114,16 +114,15 @@ def order(request):
 # in: order data
 # out: add order to database, return order data
 def order_summary(request):
-    context = {
-        'products_list': [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]],
-        'sum': 20,
-        'imie': 'dawid',
-        'nazwisko': 'bilinski',
-        'email': 'dawid.bilinski@gmail.com',
-        'ulica': 'Kwiatkowa',
-        'miasto': 'Wrocław',
-        'kod_pocztowy': '58-230',
-    }
+    data = {}
+
+    for key in request.GET:
+        data[key] = request.GET.get(key, '')
+
+    context = data
+    context['products_list'] = [['mikrofala', 2], ['lodowka', 5], ['zamrazarka', 14], ['piekarnik', 122]]
+    context['sum'] = 20
+
     return render(request, 'server/order_summary.html', context)
 
 
@@ -150,10 +149,15 @@ def payment(request):
 # 3.1.6 manager/panel
 # in:
 # out:
+def panel(request):
+    return render(request, 'server/panel.html', {})
+
 
 # 3.1.6 manager_panel/discount_creator (no data - display empty creator)
 # in:
 # out:
+def discount_creator(request):
+    return render(request, 'server/panel.html', {})
 
 # 3.1.6 manager_panel/discount_creator
 # in: discount data
