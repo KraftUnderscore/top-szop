@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+{% include "server/partial/header.html" %}
+
+<body>
+	{% include "server/partial/top_bar.html" with page="Panel kierownika" %}
+
+	<div class="content">
+		{% include "server/partial/panel_kierownika.html" %}
+
+        <div class="panel">
+            <h2 style="text-align: center; padding-top: 15px;">Kreator promocji</h2>
+            <div style="width: 90%; margin: auto;">
+				{% include "server/partial/form_item.html" with label="Nazwa promocji:" input="nazwa" %}
+				{% include "server/partial/form_item.html" with label="Procent zniżki:" input="procent" %}
+				{% include "server/partial/form_item.html" with label="Koszt punktów lojalnościowych:" input="koszt" %}
+                {% include "server/partial/form_item.html" with label="Kategoria produktów:" input="kategoria" %}
+                {% include "server/partial/form_item.html" with label="Data rozpoczęcia:" input="start" %}
+                {% include "server/partial/form_item.html" with label="Data zakończenia:" input="koniec" %}
+		    </div>
+            <div class="message-flex" style="padding: 20px;">
+                <button type="button" id="powrot">Powrót</button>
+                <button type="button" id="weryfikuj">Weryfikuj</button>
+            </div>
+        </div>
+	</div>
+
+    {% if confirm == "good" %}
+		{% include "server/partial/question_msg.html" with msg=message link_if_yes="/panel/discount_creator?confirm=yes" link_if_no="/panel/discount_creator?confirm=no" %}
+    {% elif confirm == "bad" %}
+        {% include "server/partial/info_msg.html" with msg=message link=link_ %}
+	{% endif %}
+
+	<script type="text/javascript">
+		document.getElementById("powrot").onclick = function() {
+			location.href = "/panel";
+		};
+		document.getElementById("weryfikuj").onclick = function() {
+			var req = "/panel/discount_creator?nazwa=" + document.getElementById("nazwa").value;
+			req += "&procent=" + document.getElementById("procent").value;
+			req += "&koszt=" + document.getElementById("koszt").value;
+			req += "&kategoria=" + document.getElementById("kategoria").value;
+			req += "&start=" + document.getElementById("start").value;
+			req += "&koniec=" + document.getElementById("koniec").value;
+			location.href = req;
+		};
+	</script>
+</body>
+
+</html>

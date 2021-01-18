@@ -16,12 +16,18 @@
         </div>
 	</div>
 
+	{% if authentication %}
+		{% include "server/partial/login_form.html" %}
+	{% elif message %}
+		{% include "server/partial/info_msg.html" with msg=message link=link_ %}
+	{% endif %}
+
 	<script type="text/javascript">
 		document.getElementById("modyfikuj").onclick = function() {
-			location.href = "/my_cart/search";
+			location.href = "/panel?authentication=true";
 		};
 		document.getElementById("dodaj").onclick = function() {
-			location.href = "/my_cart/order";
+			location.href = "/panel/discount_creator";
 		};
 	</script>
 </body>

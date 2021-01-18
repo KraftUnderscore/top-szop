@@ -1,0 +1,26 @@
+<div class="message-box center">
+    <div class="message-quarter">
+        <p>Wymagane potwierdzenie tożsamości!</p>
+    </div>
+    <div class="message-quarter">
+        {% include "server/partial/form_item.html" with label="Login:" input="login" %}
+    </div>
+    <div class="message-quarter">
+        {% include "server/partial/form_item.html" with label="Hasło:" input="password" %}
+    </div>
+    <div class="message-quarter">
+        <button type="button" id="dalej">Zaloguj się</button>
+        <button type="button" id="powrot">Powrót</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.getElementById("dalej").onclick = function() {
+        var login = document.getElementById("login").value;
+        var password = document.getElementById("password").value;
+        location.href = "/panel?login=" + login + "&password=" + password;
+    };
+    document.getElementById("powrot").onclick = function() {
+        location.href = "/panel";
+    };
+</script>

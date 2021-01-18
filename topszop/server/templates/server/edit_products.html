@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+{% include "server/partial/header.html" %}
+
+<body>
+	{% include "server/partial/top_bar.html" with page="Panel kierownika" %}
+
+	<div class="content">
+        <h2 style="text-align: center; padding: 20px;">Panel modyfikacji katalogu produktów</h2>
+
+        <div class="panel">
+            {% if products_list %}
+                {% for product, price, code in products_list %}
+                    {% include "server/partial/product_item.html" with nazwa=product cena=price kod=code %}
+                {% endfor %}
+            {% else %}
+                <p>Brak produktow w katalogu!</p>
+            {% endif %}
+        </div>
+
+        <div class="panel-footer">
+            <button type="button" id="dodaj">Dodaj produkt</button>
+            <button type="button" id="usun_all">Usuń zaznaczone</button>
+            <button type="button" id="usun">Usuń ręcznie</button>
+            <button type="button" id="panel">Panel kierownika</button>
+        </div>
+	</div>
+
+	<script type="text/javascript">
+		document.getElementById("dodaj").onclick = function() {
+			location.href = "/panel/edit_products/add_product";
+		};
+		document.getElementById("usun_all").onclick = function() {
+			location.href = "/panel/edit_products/remove_checked";
+		};
+		document.getElementById("usun").onclick = function() {
+			location.href = "/panel/edit_products/remove_from_entry";
+		};
+		document.getElementById("panel").onclick = function() {
+			location.href = "/panel";
+		};
+	</script>
+</body>
+
+</html>

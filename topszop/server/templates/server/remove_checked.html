@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+{% include "server/partial/header.html" %}
+
+<body>
+	{% include "server/partial/top_bar.html" with page="Panel kierownika" %}
+
+	<div class="content">
+        <h2 style="text-align: center; padding: 20px;">Usuwanie zaznaczonych produktów</h2>
+
+        <div class="panel">
+            {% if products_list %}
+                {% for product, price, code in products_list %}
+                    {% include "server/partial/product_item.html" with nazwa=product cena=price kod=code %}
+                {% endfor %}
+            {% else %}
+                <p>Brak zaznaczonych produktów!</p>
+            {% endif %}
+
+            <div class="panel-footer">
+                <button type="button" id="powrot">Nie usuwaj</button>
+                <button type="button" id="usun">Usuń</button>
+            </div>
+        </div>
+	</div>
+
+    {% if message %}
+        {% include 'server/partial/info_msg.html' with msg=message link='/panel/edit_products' %}
+    {% endif %}
+
+	<script type="text/javascript">
+		document.getElementById("powrot").onclick = function() {
+			location.href = "/panel/edit_products";
+		};
+		document.getElementById("usun").onclick = function() {
+			location.href = "/panel/edit_products/remove_checked?confirm=yes";
+		};
+	</script>
+</body>
+
+</html>
