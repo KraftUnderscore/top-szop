@@ -229,8 +229,12 @@ def discount_creator(request):
 # in:
 # out: all products
 def edit_products(request):
+    products_list = []
+    for prod in product_op.get_all_products():
+        products_list.append((prod.name, prod.price, prod.id))
+
     context = {
-        'products_list': [['mikrofala', 2, 12893], ['lodowka', 5, 28912], ['zamrazarka', 14, 89124], ['piekarnik', 122, 73894]]
+        'products_list': products_list
     }
 
     return render(request, 'server/edit_products.html', context)
@@ -247,10 +251,13 @@ def add_product(request):
 
     context = {}
 
+    print(data)
+
     # check data validity
     if 'confirm' in data:
         if data['confirm'] == "yes":
-            # backend stuff
+            print(data)
+            print(product_op.add_product(data['nazwa'], data['opis'], data['cena']))
             return edit_products(request)
         else:
             # just go back
@@ -258,6 +265,11 @@ def add_product(request):
 
     # backend verifies if data is correct (and sets value is_good to 'good', 'bad' or 'no data')
     is_good = request.GET.get('nazwa', 'no data')
+    if 'nazwa' in data:
+        if product_op.get_product_duplicate(data['nazwa']):
+            is_good = "bad"
+        else:
+            is_good = "good"
 
     # frontend sets appropriate data
     if is_good == 'good':
@@ -301,10 +313,13 @@ def remove_from_entry(request):
     confirm = request.GET.get('confirm', '')
 
     context = {}
+    parsed_codes = codes.split(";")
 
     # check data validity
     if confirm == "yes":
         # backend stuff
+        for code in parsed_codes:
+            product_op.remove_product(code)
         return edit_products(request)
     elif confirm == "no":
         # just go back
@@ -312,6 +327,12 @@ def remove_from_entry(request):
 
     # backend verifies if data is correct (and sets value is_good to 'good', 'bad' or 'no data')
     is_good = codes
+    if len(parsed_codes) > 0:
+        is_good = 'good'
+        for code in parsed_codes:
+            if not product_op.get_product_by_id(code):
+                is_good = 'bad'
+                break
 
     # frontend sets appropriate data
     if is_good == 'good':
