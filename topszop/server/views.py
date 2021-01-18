@@ -164,46 +164,161 @@ def payment(request):
 # in:
 # out:
 def panel(request):
-    return render(request, 'server/panel.html', {})
+    authentication = request.GET.get('authentication', '')
+    login = request.GET.get('login', '')
+    password = request.GET.get('password', '')
+
+    context = {}
+
+    if authentication != '':
+        # login form
+        context['authentication'] = 'true'
+    elif login != '' and password != '':
+        # backend validates stuff and properly sets correct_credentials
+        if login == "true":
+            correct_credentials = True
+        else:
+            correct_credentials = False
+
+        # now frontend does its magic
+        if correct_credentials:
+            context['message'] = "Tożsamość potwierdzona!"
+            context['link_'] = "/panel/edit_products"
+        else:
+            context['message'] = "Niepoprawne dane logowania!"
+            context['link_'] = "/panel"
+
+    return render(request, 'server/panel.html', context)
 
 
 # 3.1.6 manager_panel/discount_creator (no data - display empty creator)
 # in:
 # out:
 def discount_creator(request):
-    return render(request, 'server/panel.html', {})
+    data = {}
 
-# 3.1.6 manager_panel/discount_creator
-# in: discount data
-# out: discount data on success (display confirmation alert)
-#      or empty on failed (display failed message)
+    for key in request.GET:
+        data[key] = request.GET.get(key, '')
+
+    context = {}
+
+    # check first if discount is confirmed
+    if 'confirm' in data:
+        if data['confirm'] == "yes":
+            # backend stuff
+            return panel(request)
+        else:
+            # just go back
+            return panel(request)
+
+    # backend verifies if data is correct (and sets value is_good to 'good', 'bad' or 'no data')
+    is_good = request.GET.get('nazwa', 'no data')
+
+    # frontend sets appropriate data
+    if is_good == 'good':
+        context['confirm'] = 'good'
+        context['message'] = "Czy chcesz potwierdzić podanie promocji?"
+    elif is_good == 'bad':
+        context['confirm'] = 'bad'
+        context['message'] = "Weryfikacja nieudana, podano nieprawidłowe dane."
+
+    return render(request, 'server/discount_creator.html', context)
+
 
 # 3.1.7 manager_panel/edit_products
 # in:
-# out:
-
-# 3.1.7 manager_panel/edit_products/list
-# in:
 # out: all products
+def edit_products(request):
+    context = {
+        'products_list': [['mikrofala', 2, 12893], ['lodowka', 5, 28912], ['zamrazarka', 14, 89124], ['piekarnik', 122, 73894]]
+    }
+
+    return render(request, 'server/edit_products.html', context)
+
 
 # 3.1.8 manager_panel/edit_products/add_product (no data - display empty creator)
 # in:
 # out:
+def add_product(request):
+    data = {}
 
-# 3.1.8 manager_panel/edit_products/add_product
-# in: product data
-# out: 0 on success and added product data
-#      1 on duplicate and duplicate product data
-#      2 on incorrect data and to-be-added product data
+    for key in request.GET:
+        data[key] = request.GET.get(key, '')
 
-# 3.1.8 manager_panel/edit_products/add_product/confirm
-# in: product data
-# out: add product to database
+    context = {}
 
-# 3.1.9 manager_panel/edit_products/remove
+    # check data validity
+    if 'confirm' in data:
+        if data['confirm'] == "yes":
+            # backend stuff
+            return edit_products(request)
+        else:
+            # just go back
+            return edit_products(request)
+
+    # backend verifies if data is correct (and sets value is_good to 'good', 'bad' or 'no data')
+    is_good = request.GET.get('nazwa', 'no data')
+
+    # frontend sets appropriate data
+    if is_good == 'good':
+        context['confirm'] = 'good'
+        context['message'] = "Czy na pewno chcesz dodać produkt?"
+    elif is_good == 'bad':
+        context['confirm'] = 'bad'
+        context['message'] = "Wprowadzone dane są niepoprawne!"
+
+    return render(request, 'server/add_product.html', context)
+
+
+# 3.1.9 manager_panel/edit_products/remove_checked
 # in:
 # out: all products
+def remove_checked(request):
+    data = {}
+
+    for key in request.GET:
+        data[key] = request.GET.get(key, '')
+
+    confirmed = request.GET.get('confirm', '')
+
+    # data has list of product names that have been checked
+    context = {
+        'products_list': [['mikrofala', 2, 12893], ['lodowka', 5, 28912], ['zamrazarka', 14, 89124],
+                          ['piekarnik', 122, 73894]]
+    }
+
+    if confirmed != '':
+        context['message'] = "Pomyślnie usunięto produkty."
+
+    return render(request, 'server/remove_checked.html', context)
+
 
 # 3.1.9 manager_panel/edit_products/remove
 # in: id of product to remove
 # out: remove product from database, return updated list of products
+def remove_from_entry(request):
+    codes = request.GET.get('codes', '')
+    confirm = request.GET.get('confirm', '')
+
+    context = {}
+
+    # check data validity
+    if confirm == "yes":
+        # backend stuff
+        return edit_products(request)
+    elif confirm == "no":
+        # just go back
+        return edit_products(request)
+
+    # backend verifies if data is correct (and sets value is_good to 'good', 'bad' or 'no data')
+    is_good = codes
+
+    # frontend sets appropriate data
+    if is_good == 'good':
+        context['confirm'] = 'good'
+        context['message'] = "Czy na pewno chcesz usunąć produkty?"
+    elif is_good == 'bad':
+        context['confirm'] = 'bad'
+        context['message'] = "Wprowadzone dane są niepoprawne!"
+
+    return render(request, 'server/remove_from_entry.html', context)

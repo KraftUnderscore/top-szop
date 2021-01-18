@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+{% include "server/partial/header.html" %}
+
+<body>
+	{% include "server/partial/top_bar.html" with page="Panel kierownika" %}
+
+	<div class="content">
+        <h2 style="text-align: center; padding: 20px;">Wpisz kody produktów do usunięcia:</h2>
+
+        <div class="panel">
+            <p style="margin-top: 40px; margin-left: 40px;">Opis:</p>
+            <input style="width: 90%; margin: 10px 5%; height: 200px;" type="text" id="opis" name="opis">
+
+            <div class="panel-footer">
+                <button type="button" id="powrot">Nie usuwaj</button>
+                <button type="button" id="usun">Usuń</button>
+            </div>
+        </div>
+	</div>
+
+    {% if confirm == "good" %}
+		{% include "server/partial/question_msg.html" with msg=message link_if_yes="/panel/edit_products/add_product?confirm=yes" link_if_no="/panel/edit_products/add_product?confirm=no" %}
+    {% elif confirm == "bad" %}
+        {% include "server/partial/info_msg.html" with msg=message link="/panel/edit_products" %}
+	{% endif %}
+
+	<script type="text/javascript">
+		document.getElementById("powrot").onclick = function() {
+			location.href = "/panel/edit_products";
+		};
+		document.getElementById("usun").onclick = function() {
+			location.href = "/panel/edit_products/remove_from_entry?codes=" + document.getElementById("opis").value;
+		};
+	</script>
+</body>
+
+</html>
