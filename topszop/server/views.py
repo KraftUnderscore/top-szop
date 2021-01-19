@@ -8,6 +8,7 @@ from .database_operations import \
     discount as discount_op, \
     delivery as delivery_op
 
+
 class Memory():
     def __init__(self):
         self.codes_to_remove = []
@@ -21,7 +22,8 @@ class Memory():
 #      a list of all products matching the name and pass it onto the Template (which should interpret
 #      whether there were results and should display them or give "Not found" message)
 
-# 3.1.1 my_cart
+
+# 3.1.1 my_cart - shows all products that are currently in cart
 # in:
 # out: all products in cart
 def my_cart(request):
@@ -33,7 +35,7 @@ def my_cart(request):
     return render(request, 'server/index.html', context)
 
 
-# 3.1.1 my_cart/change_amount (all products in cart + chosen product)
+# 3.1.1 my_cart/change_amount - shows editor for amount of given product
 # in: productId
 # out: all products in cart with updated product amount
 def change_amount(request):
@@ -60,7 +62,7 @@ def change_amount(request):
     return render(request, 'server/change_amount.html', context)
 
 
-# 3.1.2 my_cart/add_to_cart (adds product to cart)
+# 3.1.2 my_cart/add_to_cart - adds product to cart
 # in: product id
 # out: product added to database
 def add_to_cart(request):
@@ -69,7 +71,7 @@ def add_to_cart(request):
     return my_cart(None)
 
 
-# 3.1.2 my_cart/search (product matching name)
+# 3.1.2 my_cart/search - shows all products that match given phrase
 # in: name
 # out: products matching name
 def search(request):
@@ -91,9 +93,9 @@ def search(request):
     return render(request, 'server/search.html', context)
 
 
-# 3.1.3 my_cart/remove
-# in: productId, amount to decrease
-# out: remove amount of product from cart, return all products in cart
+# 3.1.3 my_cart/remove - removes given product
+# in: productId
+# out: remove product from cart, return all products in cart
 def remove(request):
     name = request.GET.get('name', '')
     confirm = request.GET.get('confirm', '')
@@ -111,7 +113,7 @@ def remove(request):
         return render(request, 'server/remove.html', context)
 
 
-# 3.1.4 my_cart/order
+# 3.1.4 my_cart/order - shows form for ordering products from cart
 # in:
 # out: all products in cart
 def order(request):
@@ -125,7 +127,7 @@ def order(request):
     return render(request, 'server/order.html', context)
 
 
-# 3.1.4 my_cart/order_summary
+# 3.1.4 my_cart/order_summary - shows summary or order
 # in: order data
 # out: add order to database, return order data
 def order_summary(request):
@@ -151,9 +153,9 @@ def order_summary(request):
     return render(request, 'server/order_summary.html', context)
 
 
-# 3.1.5 my_cart/payment
+# 3.1.5 my_cart/payment - shows all possible payments that user can choose from
 # in:
-# out: (just make a random function in the Template that displays success/ failed xD)
+# out: status of online payment from bank website
 def payment(request):
     status = request.GET.get('status', '')
 
@@ -173,6 +175,9 @@ def payment(request):
     return render(request, 'server/payment.html', context)
 
 
+# 3.1.5 my_cart/confirm_order - shows status of order
+# in: status of order
+# out:
 def confirm_order(request):
     confirm = request.GET.get('confirm', '')
 
@@ -189,7 +194,7 @@ def confirm_order(request):
     return render(request, 'server/confirm_order.html', context)
 
 
-# 3.1.6 manager/panel
+# 3.1.6 manager/panel - shows manager panel
 # in:
 # out:
 def panel(request):
@@ -221,7 +226,7 @@ def panel(request):
     return render(request, 'server/panel.html', context)
 
 
-# 3.1.6 manager_panel/discount_creator (no data - display empty creator)
+# 3.1.6 manager_panel/discount_creator - shows discount creator
 # in:
 # out:
 def discount_creator(request):
@@ -269,7 +274,7 @@ def discount_creator(request):
     return render(request, 'server/discount_creator.html', context)
 
 
-# 3.1.7 manager_panel/edit_products
+# 3.1.7 manager_panel/edit_products - shows all products from catalogue
 # in:
 # out: all products
 def edit_products(request):
@@ -284,7 +289,7 @@ def edit_products(request):
     return render(request, 'server/edit_products.html', context)
 
 
-# 3.1.8 manager_panel/edit_products/add_product (no data - display empty creator)
+# 3.1.8 manager_panel/edit_products/add_product - shows product creator
 # in:
 # out:
 def add_product(request):
@@ -331,7 +336,7 @@ def add_product(request):
     return render(request, 'server/add_product.html', context)
 
 
-# 3.1.9 manager_panel/edit_products/remove_checked
+# 3.1.9 manager_panel/edit_products/remove_checked - removes products checked from list
 # in:
 # out: all products
 def remove_checked(request):
@@ -366,9 +371,9 @@ def remove_checked(request):
     return render(request, 'server/remove_checked.html', context)
 
 
-# 3.1.9 manager_panel/edit_products/remove
-# in: id of product to remove
-# out: remove product from database, return updated list of products
+# 3.1.9 manager_panel/edit_products/remove - removes products that have been listed
+# in: ids of products to remove
+# out: remove products from database, return updated list of products
 def remove_from_entry(request):
     codes = request.GET.get('codes', '')
     confirm = request.GET.get('confirm', '')
@@ -403,7 +408,6 @@ def remove_from_entry(request):
                     break
             except ValueError:
                 is_good = 'bad'
-
 
     # frontend sets appropriate data
     if is_good == 'good':
