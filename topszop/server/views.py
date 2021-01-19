@@ -8,6 +8,12 @@ from .database_operations import \
     discount as discount_op, \
     delivery as delivery_op
 
+class Memory():
+    def __init__(self):
+        self.codes_to_remove = []
+        self.prods_to_remove = []
+        self.add_product_data = []
+
 # My proposition for interface between Templates and backend:
 # <interface number> url path/ subpath, ex. for 3.1.2 localhost:8000/my_cart/search
 # in: expected input from interface, ex. for 3.1.2 localhost:8000/my_cart/search?name=kanapka
@@ -20,6 +26,7 @@ from .database_operations import \
 # out: all products in cart
 def my_cart(request):
     products = cart_op.get_all_products_from_cart()
+
     context = {
         'products_list': products,
     }
@@ -150,6 +157,7 @@ def payment(request):
         context = {
             'message': 'Operacja zakończona sukcesem',
         }
+        cart_op.clean_cart()
     elif status == 'no':
         context = {
             'message': 'Przepraszamy, operacja zakończona niepowodzeniem',
@@ -175,6 +183,7 @@ def panel(request):
         context['authentication'] = 'true'
     elif login != '' and password != '':
         # backend validates stuff and properly sets correct_credentials
+        login = "true"
         if login == "true":
             correct_credentials = True
         else:
@@ -206,13 +215,23 @@ def discount_creator(request):
     if 'confirm' in data:
         if data['confirm'] == "yes":
             # backend stuff
+            discount_op.add_discount(data["start"], data["koniec"],
+                                     float(data["procent"]), int(data["koszt"]))
             return panel(request)
         else:
             # just go back
             return panel(request)
 
     # backend verifies if data is correct (and sets value is_good to 'good', 'bad' or 'no data')
-    is_good = request.GET.get('nazwa', 'no data')
+    is_good = request.GET.get('nazwa', '')
+
+    if is_good != '':
+        if discount_op.is_valid(discount_op.timezone_parse_date(data["start"]),
+                                discount_op.timezone_parse_date(data["koniec"]),
+                                float(data["procent"]), int(data["koszt"])):
+            is_good = 'good'
+        else:
+            is_good = 'bad'
 
     # frontend sets appropriate data
     if is_good == 'good':
@@ -253,13 +272,12 @@ def add_product(request):
 
     context = {}
 
-    print(data)
-
     # check data validity
     if 'confirm' in data:
         if data['confirm'] == "yes":
-            print(data)
-            print(product_op.add_product(data['nazwa'], data['opis'], data['cena']))
+            p_data = Memory.add_product_data
+            product_op.add_product(p_data['nazwa'], p_data['opis'], p_data['cena'])
+            Memory.add_product_data = []
             return edit_products(request)
         else:
             # just go back
@@ -277,8 +295,8 @@ def add_product(request):
     if is_good == 'good':
         context['confirm'] = 'good'
         context['message'] = "Czy na pewno chcesz dodać produkt?"
-        context['params'] = "/panel/add_product?confirm=yes&" + ''.join(
-            ["&" + k + "=" + v for k, v in data.items()])
+        context['params'] = "/panel/edit_products/add_product?confirm=yes"
+        Memory.add_product_data = data
     elif is_good == 'bad':
         context['confirm'] = 'bad'
         context['message'] = "Wprowadzone dane są niepoprawne!"
@@ -298,18 +316,28 @@ def remove_checked(request):
     for key in request.GET:
         data[key] = request.GET.get(key, '')
         if data[key] == "true":
-            products.append(key)
+            print(key)
+            prod = product_op.get_product_by_name(key)
+            products.append((prod.name, prod.id, prod.price))
 
     confirmed = request.GET.get('confirm', '')
-
     # data has list of product names that have been checked [name, price, code]
     context = {
-        'products_list': [['mikrofala', 2, 12893], ['lodowka', 5, 28912], ['zamrazarka', 14, 89124],
-                          ['piekarnik', 122, 73894]]
+        'products_list': products
     }
 
     if confirmed != '':
+        print("test")
+        print(Memory.prods_to_remove)
+        for prod in Memory.prods_to_remove:
+            print(prod)
+            print(product_op.remove_product(prod[1]))
+
+        Memory.prods_to_remove = []
         context['message'] = "Pomyślnie usunięto produkty."
+    else:
+        Memory.prods_to_remove = products
+
 
     return render(request, 'server/remove_checked.html', context)
 
@@ -327,26 +355,37 @@ def remove_from_entry(request):
     # check data validity
     if confirm == "yes":
         # backend stuff
-        for code in parsed_codes:
-            product_op.remove_product(code)
+        for code in Memory.codes_to_remove:
+            try:
+                prod_id = int(code)
+                product_op.remove_product(prod_id)
+            except ValueError:
+                parsed_codes = []
+            Memory.codes_to_remove = []
         return edit_products(request)
     elif confirm == "no":
         # just go back
         return edit_products(request)
 
     # backend verifies if data is correct (and sets value is_good to 'good', 'bad' or 'no data')
-    is_good = codes
-    if len(parsed_codes) > 0:
+    is_good = request.GET.get('codes', 'no data')
+    if len(parsed_codes) > 0 and is_good != 'no data':
         is_good = 'good'
         for code in parsed_codes:
-            if not product_op.get_product_by_id(code):
+            try:
+                prod_id = int(code)
+                if not product_op.get_product_by_id(prod_id):
+                    is_good = 'bad'
+                    break
+            except ValueError:
                 is_good = 'bad'
-                break
+
 
     # frontend sets appropriate data
     if is_good == 'good':
         context['confirm'] = 'good'
         context['message'] = "Czy na pewno chcesz usunąć produkty?"
+        Memory.codes_to_remove = parsed_codes
     elif is_good == 'bad':
         context['confirm'] = 'bad'
         context['message'] = "Wprowadzone dane są niepoprawne!"
