@@ -6,7 +6,10 @@
         {% include "server/partial/form_item.html" with label="Login:" input="login" %}
     </div>
     <div class="message-quarter">
-        {% include "server/partial/form_item.html" with label="Hasło:" input="password" %}
+        <div class="form-item">
+            <label>Hasło:</label>
+            <input style="float: right;" type="password" id="password" name="password">
+        </div>
     </div>
     <div class="message-quarter">
         <button type="button" id="dalej">Zaloguj się</button>

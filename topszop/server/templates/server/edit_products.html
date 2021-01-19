@@ -32,7 +32,13 @@
 			location.href = "/panel/edit_products/add_product";
 		};
 		document.getElementById("usun_all").onclick = function() {
-			location.href = "/panel/edit_products/remove_checked";
+		    tmp = "/panel/edit_products/remove_checked?";
+		    {% if products_list %}
+                {% for product, price, code in products_list %}
+            tmp += "{{ product }}=" + document.getElementById("{{ product }}").checked + "&";
+                {% endfor %}
+            {% endif %}
+			location.href = tmp;
 		};
 		document.getElementById("usun").onclick = function() {
 			location.href = "/panel/edit_products/remove_from_entry";

@@ -27,9 +27,9 @@
 	</div>
 
     {% if confirm == "good" %}
-		{% include "server/partial/question_msg.html" with msg=message link_if_yes="/panel/discount_creator?confirm=yes" link_if_no="/panel/discount_creator?confirm=no" %}
+		{% include "server/partial/question_msg.html" with msg=message link_if_yes=params link_if_no="/panel/discount_creator?confirm=no" %}
     {% elif confirm == "bad" %}
-        {% include "server/partial/info_msg.html" with msg=message link=link_ %}
+        {% include "server/partial/info_msg.html" with msg=message link="/panel/discount_creator" %}
 	{% endif %}
 
 	<script type="text/javascript">

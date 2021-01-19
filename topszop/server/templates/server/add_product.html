@@ -29,7 +29,7 @@
 	</div>
 
     {% if confirm == "good" %}
-		{% include "server/partial/question_msg.html" with msg=message link_if_yes="/panel/edit_products/add_product?confirm=yes" link_if_no="/panel/edit_products/add_product?confirm=no" %}
+		{% include "server/partial/question_msg.html" with msg=message link_if_yes=params link_if_no="/panel/edit_products/add_product?confirm=no" %}
     {% elif confirm == "bad" %}
         {% include "server/partial/info_msg.html" with msg=message link="/panel/edit_products" %}
 	{% endif %}
