@@ -162,7 +162,6 @@ def payment(request):
             'message': 'Operacja zakończona sukcesem',
             'link_': '/my_cart/confirm_order?confirm=yes',
         }
-        cart_op.clean_cart()
     elif status == 'no':
         context = {
             'message': 'Przepraszamy, operacja zakończona niepowodzeniem',
@@ -181,6 +180,7 @@ def confirm_order(request):
         context = {
             'message': 'Dziękujemy za złożenie zamówienia'
         }
+        cart_op.clean_cart()
     else:
         context = {
             'message': 'Niestety, nie udało się złożyć zamówienia :('
@@ -262,7 +262,6 @@ def discount_creator(request):
         context['confirm'] = 'good'
         context['message'] = "Czy chcesz potwierdzić podanie promocji?"
         context['params'] = "/panel/discount_creator?confirm=yes&" + ''.join(["&" + k + "=" + v for k, v in data.items()])
-        print(context['params'])
     elif is_good == 'bad':
         context['confirm'] = 'bad'
         context['message'] = "Weryfikacja nieudana, podano nieprawidłowe dane."
@@ -344,7 +343,6 @@ def remove_checked(request):
     for key in request.GET:
         data[key] = request.GET.get(key, '')
         if data[key] == "true":
-            print(key)
             prod = product_op.get_product_by_name(key)
             products.append((prod.name, prod.id, prod.price))
 
