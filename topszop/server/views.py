@@ -136,11 +136,15 @@ def order_summary(request):
         data[key] = request.GET.get(key, '')
         address+=f"{data[key]};"
 
+    context = data
+
+    if any(x == '' for x in data.values()):
+        return order(request)
+
     delivery_op.add_delivery(1, address[:-1])
     products = cart_op.get_all_products_from_cart()
     total = order_op.calculate_total_cost()
 
-    context = data
     context['products_list'] = products
     context['sum'] = total
 
@@ -156,16 +160,33 @@ def payment(request):
     if status == 'yes':
         context = {
             'message': 'Operacja zakończona sukcesem',
+            'link_': '/my_cart/confirm_order?confirm=yes',
         }
         cart_op.clean_cart()
     elif status == 'no':
         context = {
             'message': 'Przepraszamy, operacja zakończona niepowodzeniem',
+            'link_': '/my_cart/confirm_order?confirm=no',
         }
     else:
         context = {}
 
     return render(request, 'server/payment.html', context)
+
+
+def confirm_order(request):
+    confirm = request.GET.get('confirm', '')
+
+    if confirm == 'yes':
+        context = {
+            'message': 'Dziękujemy za złożenie zamówienia'
+        }
+    else:
+        context = {
+            'message': 'Niestety, nie udało się złożyć zamówienia :('
+        }
+
+    return render(request, 'server/confirm_order.html', context)
 
 
 # 3.1.6 manager/panel

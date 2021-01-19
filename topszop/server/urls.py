@@ -17,4 +17,5 @@ urlpatterns = [
     path('panel/edit_products/add_product', views.add_product, name='add_product'),
     path('panel/edit_products/remove_checked', views.remove_checked, name='remove_checked'),
     path('panel/edit_products/remove_from_entry', views.remove_from_entry, name='remove_from_entry'),
+    path('my_cart/confirm_order', views.confirm_order, name='confirm_order'),
 ]

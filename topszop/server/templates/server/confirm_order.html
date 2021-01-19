@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+
+{% include "server/partial/header.html" %}
+
+<body>
+	{% include "server/partial/top_bar.html" with page="Status zamówienia" %}
+
+	{% include "server/partial/info_msg.html" with msg=message link="/my_cart" %}
+</body>
+
+</html>

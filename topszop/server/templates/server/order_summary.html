@@ -50,13 +50,13 @@
 
 	<script type="text/javascript">
 		document.getElementById("anuluj").onclick = function() {
-			location.href = "/my_cart";
+			location.href = "/my_cart/confirm_order?confirm=no";
 		};
 		document.getElementById("dalej").onclick = function() {
             if (document.getElementById('4').checked) {
                 location.href = "/my_cart/payment";
             } else {
-			    location.href = "/my_cart";
+			    location.href = "/my_cart/confirm_order?confirm=yes";
 			}
 		};
 	</script>
