@@ -229,6 +229,8 @@ def discount_creator(request):
     if is_good == 'good':
         context['confirm'] = 'good'
         context['message'] = "Czy chcesz potwierdzić podanie promocji?"
+        context['params'] = "/panel/discount_creator?confirm=yes&" + ''.join(["&" + k + "=" + v for k, v in data.items()])
+        print(context['params'])
     elif is_good == 'bad':
         context['confirm'] = 'bad'
         context['message'] = "Weryfikacja nieudana, podano nieprawidłowe dane."
@@ -283,6 +285,8 @@ def add_product(request):
     if is_good == 'good':
         context['confirm'] = 'good'
         context['message'] = "Czy na pewno chcesz dodać produkt?"
+        context['params'] = "/panel/add_product?confirm=yes&" + ''.join(
+            ["&" + k + "=" + v for k, v in data.items()])
     elif is_good == 'bad':
         context['confirm'] = 'bad'
         context['message'] = "Wprowadzone dane są niepoprawne!"
@@ -296,12 +300,17 @@ def add_product(request):
 def remove_checked(request):
     data = {}
 
+    # names of products that have been checked
+    products = []
+
     for key in request.GET:
         data[key] = request.GET.get(key, '')
+        if data[key] == "true":
+            products.append(key)
 
     confirmed = request.GET.get('confirm', '')
-    print(data)
-    # data has list of product names that have been checked
+
+    # data has list of product names that have been checked [name, price, code]
     context = {
         'products_list': [['mikrofala', 2, 12893], ['lodowka', 5, 28912], ['zamrazarka', 14, 89124],
                           ['piekarnik', 122, 73894]]
