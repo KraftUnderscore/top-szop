@@ -1,6 +1,5 @@
 from django.utils import timezone
-from django.db.models import Sum
-from server.models import Order, Cart_Product, Product
+from server.models import Order, Cart_Product
 from .cart import cart_exist, get_all_products_from_cart, get_product_by_id
 
 def get_order_data(order_id=1):

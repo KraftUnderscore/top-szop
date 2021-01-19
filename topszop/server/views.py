@@ -374,7 +374,7 @@ def remove_from_entry(request):
     confirm = request.GET.get('confirm', '')
 
     context = {}
-    parsed_codes = codes.split(";")
+    parsed_codes = codes.split(",")
 
     # check data validity
     if confirm == "yes":
@@ -385,7 +385,7 @@ def remove_from_entry(request):
                 product_op.remove_product(prod_id)
             except ValueError:
                 parsed_codes = []
-            Memory.codes_to_remove = []
+        Memory.codes_to_remove = []
         return edit_products(request)
     elif confirm == "no":
         # just go back

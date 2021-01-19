@@ -1,4 +1,4 @@
-from server.models import Cart, Cart_Product, Product
+from server.models import Cart, Cart_Product
 from .product import get_product_by_id, get_product_by_name
 
 def add_cart():
