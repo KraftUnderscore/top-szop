@@ -175,6 +175,7 @@ def panel(request):
         context['authentication'] = 'true'
     elif login != '' and password != '':
         # backend validates stuff and properly sets correct_credentials
+        login = "true"
         if login == "true":
             correct_credentials = True
         else:
@@ -206,13 +207,23 @@ def discount_creator(request):
     if 'confirm' in data:
         if data['confirm'] == "yes":
             # backend stuff
+            discount_op.add_discount(data["start"], data["koniec"],
+                                     float(data["procent"]), int(data["koszt"]))
             return panel(request)
         else:
             # just go back
             return panel(request)
 
     # backend verifies if data is correct (and sets value is_good to 'good', 'bad' or 'no data')
-    is_good = request.GET.get('nazwa', 'no data')
+    is_good = request.GET.get('nazwa', '')
+
+    if is_good != '':
+        if discount_op.is_valid(discount_op.timezone_parse_date(data["start"]),
+                                discount_op.timezone_parse_date(data["koniec"]),
+                                float(data["procent"]), int(data["koszt"])):
+            is_good = 'good'
+        else:
+            is_good = 'bad'
 
     # frontend sets appropriate data
     if is_good == 'good':
@@ -251,13 +262,10 @@ def add_product(request):
 
     context = {}
 
-    print(data)
-
     # check data validity
     if 'confirm' in data:
         if data['confirm'] == "yes":
-            print(data)
-            print(product_op.add_product(data['nazwa'], data['opis'], data['cena']))
+            product_op.add_product(data['nazwa'], data['opis'], data['cena'])
             return edit_products(request)
         else:
             # just go back
@@ -292,7 +300,7 @@ def remove_checked(request):
         data[key] = request.GET.get(key, '')
 
     confirmed = request.GET.get('confirm', '')
-
+    print(data)
     # data has list of product names that have been checked
     context = {
         'products_list': [['mikrofala', 2, 12893], ['lodowka', 5, 28912], ['zamrazarka', 14, 89124],

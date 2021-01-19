@@ -25,14 +25,10 @@ def contains_other_duration(star_date, end_date):
                                .filter(end_date__lte=end_date)
     return True if overlaps.exists() else False
 
-def add_discount(start_date, end_date, value, cost):
-    """Add discount to database.\n Returns True on success and False on failure"""
+def is_valid(tz_start, tz_end, value, cost):
 
     if value < 0 or cost < 0:
         return False
-
-    tz_start = timezone_parse_date(start_date)
-    tz_end = timezone_parse_date(end_date)
 
     if tz_start == "" or tz_end == "":
         return False
@@ -41,6 +37,17 @@ def add_discount(start_date, end_date, value, cost):
         return False
 
     if contains_other_duration(tz_start, tz_end):
+        return False
+
+    return True
+
+def add_discount(start_date, end_date, value, cost):
+    """Add discount to database.\n Returns True on success and False on failure"""
+
+    tz_start = timezone_parse_date(start_date)
+    tz_end = timezone_parse_date(end_date)
+
+    if not is_valid(tz_start, tz_end, value, cost):
         return False
 
     Discount.objects.create(start_date=tz_start, end_date=tz_end,
