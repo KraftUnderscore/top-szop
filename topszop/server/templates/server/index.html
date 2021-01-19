@@ -20,13 +20,13 @@
 				{% endfor %}
 			</div>
 		{% else %}
-			<p>Brak produktow w koszyku. Dodaj cos korzystajac z przycisku ponizej :)</p>
+			<p>Brak produktów w koszyku. Dodaj coś korzystając z przycisku poniżej :)</p>
 		{% endif %}
 	</div>
 
 	<div id="footer">
 		<button type="button">Powrót</button>
-		<button type="button" id="zamow">Kup teraz</button>
+		<button type="button" id="zamow" {% if not products_list %} disabled{% endif %}>Kup teraz</button>
 		<button type="button" id="dodaj">Dodaj...</button>
 	</div>
 

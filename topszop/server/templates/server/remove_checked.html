@@ -12,7 +12,9 @@
         <div class="panel">
             {% if products_list %}
                 {% for product, price, code in products_list %}
-                    {% include "server/partial/product_item.html" with nazwa=product cena=price kod=code %}
+                    <div class="product-item">
+                        {% include "server/partial/product_item.html" with nazwa=product cena=price kod=code %}
+                    </div>
                 {% endfor %}
             {% else %}
                 <p>Brak zaznaczonych produktów!</p>

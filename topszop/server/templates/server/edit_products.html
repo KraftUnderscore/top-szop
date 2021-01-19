@@ -12,7 +12,11 @@
         <div class="panel">
             {% if products_list %}
                 {% for product, price, code in products_list %}
-                    {% include "server/partial/product_item.html" with nazwa=product cena=price kod=code %}
+                    <div class="product-item">
+                        {% include "server/partial/product_item.html" with nazwa=product cena=price kod=code %}
+                        <input style="width: 10%" type="checkbox" id="{{ product }}">
+                        <label for="{{ product }}">Usuń</label>
+                    </div>
                 {% endfor %}
             {% else %}
                 <p>Brak produktow w katalogu!</p>
@@ -33,12 +37,16 @@
 		};
 		document.getElementById("usun_all").onclick = function() {
 		    tmp = "/panel/edit_products/remove_checked?";
+		    flag = false;
 		    {% if products_list %}
                 {% for product, price, code in products_list %}
+            if (document.getElementById("{{ product }}").checked == true) flag = true;
             tmp += "{{ product }}=" + document.getElementById("{{ product }}").checked + "&";
                 {% endfor %}
             {% endif %}
-			location.href = tmp;
+            if (flag) {
+			    location.href = tmp;
+			}
 		};
 		document.getElementById("usun").onclick = function() {
 			location.href = "/panel/edit_products/remove_from_entry";
