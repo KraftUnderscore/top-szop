@@ -162,7 +162,6 @@ def payment(request):
             'message': 'Operacja zakończona sukcesem',
             'link_': '/my_cart/confirm_order?confirm=yes',
         }
-        cart_op.clean_cart()
     elif status == 'no':
         context = {
             'message': 'Przepraszamy, operacja zakończona niepowodzeniem',
@@ -181,6 +180,7 @@ def confirm_order(request):
         context = {
             'message': 'Dziękujemy za złożenie zamówienia'
         }
+        cart_op.clean_cart()
     else:
         context = {
             'message': 'Niestety, nie udało się złożyć zamówienia :('
@@ -247,11 +247,14 @@ def discount_creator(request):
     is_good = request.GET.get('nazwa', '')
 
     if is_good != '':
-        if discount_op.is_valid(discount_op.timezone_parse_date(data["start"]),
-                                discount_op.timezone_parse_date(data["koniec"]),
-                                float(data["procent"]), int(data["koszt"])):
-            is_good = 'good'
-        else:
+        try:
+            if discount_op.is_valid(discount_op.timezone_parse_date(data["start"]),
+                                    discount_op.timezone_parse_date(data["koniec"]),
+                                    float(data["procent"]), int(data["koszt"])):
+                is_good = 'good'
+            else:
+                is_good = 'bad'
+        except ValueError:
             is_good = 'bad'
 
     # frontend sets appropriate data
@@ -259,7 +262,6 @@ def discount_creator(request):
         context['confirm'] = 'good'
         context['message'] = "Czy chcesz potwierdzić podanie promocji?"
         context['params'] = "/panel/discount_creator?confirm=yes&" + ''.join(["&" + k + "=" + v for k, v in data.items()])
-        print(context['params'])
     elif is_good == 'bad':
         context['confirm'] = 'bad'
         context['message'] = "Weryfikacja nieudana, podano nieprawidłowe dane."
@@ -307,10 +309,14 @@ def add_product(request):
     # backend verifies if data is correct (and sets value is_good to 'good', 'bad' or 'no data')
     is_good = request.GET.get('nazwa', 'no data')
     if 'nazwa' in data:
-        if product_op.get_product_duplicate(data['nazwa']):
-            is_good = "bad"
-        else:
-            is_good = "good"
+        try:
+            float(data['cena'])
+            if product_op.get_product_duplicate(data['nazwa']):
+                is_good = "bad"
+            else:
+                is_good = "good"
+        except ValueError:
+            is_good = 'bad'
 
     # frontend sets appropriate data
     if is_good == 'good':
@@ -337,7 +343,6 @@ def remove_checked(request):
     for key in request.GET:
         data[key] = request.GET.get(key, '')
         if data[key] == "true":
-            print(key)
             prod = product_op.get_product_by_name(key)
             products.append((prod.name, prod.id, prod.price))
 
@@ -348,11 +353,9 @@ def remove_checked(request):
     }
 
     if confirmed != '':
-        print("test")
-        print(Memory.prods_to_remove)
         for prod in Memory.prods_to_remove:
-            print(prod)
-            print(product_op.remove_product(prod[1]))
+            prod
+            product_op.remove_product(prod[1])
 
         Memory.prods_to_remove = []
         context['message'] = "Pomyślnie usunięto produkty."

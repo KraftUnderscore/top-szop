@@ -84,7 +84,7 @@ class CartTestCase(TestCase):
         """Check if responds correctly to adding a product to non-existent Cart"""
 
         product.add_product("Monitor", "Opis monitora", 777.77)
-        out = cart.add_product_to_cart(7, 4, 2)
+        out = cart.add_product_to_cart(7, "Monitor", 2)
 
         self.assertFalse(out)
 
