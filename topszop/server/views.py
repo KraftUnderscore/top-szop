@@ -8,6 +8,10 @@ from .database_operations import \
     discount as discount_op, \
     delivery as delivery_op
 
+class Memory():
+    def __init__(self):
+        self.codes_to_remove = []
+
 # My proposition for interface between Templates and backend:
 # <interface number> url path/ subpath, ex. for 3.1.2 localhost:8000/my_cart/search
 # in: expected input from interface, ex. for 3.1.2 localhost:8000/my_cart/search?name=kanapka
@@ -20,6 +24,9 @@ from .database_operations import \
 # out: all products in cart
 def my_cart(request):
     products = cart_op.get_all_products_from_cart()
+    clear = request.GET.get('clear', '')
+    if clear != '':
+        cart_op.clear_cart()
     context = {
         'products_list': products,
     }
@@ -306,17 +313,21 @@ def remove_checked(request):
     for key in request.GET:
         data[key] = request.GET.get(key, '')
         if data[key] == "true":
-            products.append(key)
+            prod = product_op.get_product_by_name(key)
+            products.append((prod.name, prod.id, prod.price))
 
     confirmed = request.GET.get('confirm', '')
 
     # data has list of product names that have been checked [name, price, code]
     context = {
-        'products_list': [['mikrofala', 2, 12893], ['lodowka', 5, 28912], ['zamrazarka', 14, 89124],
-                          ['piekarnik', 122, 73894]]
+        'products_list': products
     }
 
     if confirmed != '':
+        for prod in products:
+            print(prod)
+            print(product_op.remove_product(prod[1]))
+
         context['message'] = "Pomyślnie usunięto produkty."
 
     return render(request, 'server/remove_checked.html', context)
@@ -335,26 +346,37 @@ def remove_from_entry(request):
     # check data validity
     if confirm == "yes":
         # backend stuff
-        for code in parsed_codes:
-            product_op.remove_product(code)
+        for code in Memory.codes_to_remove:
+            try:
+                prod_id = int(code)
+                product_op.remove_product(prod_id)
+            except ValueError:
+                parsed_codes = []
+            Memory.codes_to_remove = []
         return edit_products(request)
     elif confirm == "no":
         # just go back
         return edit_products(request)
 
     # backend verifies if data is correct (and sets value is_good to 'good', 'bad' or 'no data')
-    is_good = codes
-    if len(parsed_codes) > 0:
+    is_good = request.GET.get('codes', 'no data')
+    if len(parsed_codes) > 0 and is_good != 'no data':
         is_good = 'good'
         for code in parsed_codes:
-            if not product_op.get_product_by_id(code):
+            try:
+                prod_id = int(code)
+                if not product_op.get_product_by_id(prod_id):
+                    is_good = 'bad'
+                    break
+            except ValueError:
                 is_good = 'bad'
-                break
+
 
     # frontend sets appropriate data
     if is_good == 'good':
         context['confirm'] = 'good'
         context['message'] = "Czy na pewno chcesz usunąć produkty?"
+        Memory.codes_to_remove = parsed_codes
     elif is_good == 'bad':
         context['confirm'] = 'bad'
         context['message'] = "Wprowadzone dane są niepoprawne!"
