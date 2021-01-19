@@ -26,7 +26,7 @@
 
 	<div id="footer">
 		<button type="button">Powrót</button>
-		<button type="button" id="zamow">Kup teraz</button>
+		<button type="button" id="zamow" {% if not products_list %} disabled{% endif %}>Kup teraz</button>
 		<button type="button" id="dodaj">Dodaj...</button>
 	</div>
 
