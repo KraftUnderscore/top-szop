@@ -135,3 +135,30 @@ class CartTestCase(TestCase):
         out = cart.remove_product_from_cart_by_name("Telewizor", 100)
 
         self.assertFalse(out)
+
+    def test_clear_cart(self):
+        """Try to remove all products from cart.
+        Check by assert on get_all_products_from_cart"""
+
+        out = cart.clean_cart()
+        prods = cart.get_all_products_from_cart()
+
+        self.assertEqual(len(prods), 0)
+        self.assertTrue(out)
+
+    def test_clear_empty_cart(self):
+        """Try to remove all products from an empty cart.
+        Check by assert on get_all_products_from_cart"""
+
+        cart.add_cart()
+        out = cart.clean_cart(2)
+
+        self.assertFalse(out)
+
+    def test_clear_non_existing_cart(self):
+        """Try to remove all products from a non-existent cart.
+        Check by assert on get_all_products_from_cart"""
+
+        out = cart.clean_cart(5)
+
+        self.assertFalse(out)

@@ -86,3 +86,9 @@ def get_product_from_cart(product_id, cart_id=1):
         return get_product_by_id(product_id), cart_product.amount
     except Cart_Product.DoesNotExist:
         return None, 0
+
+def clean_cart(cart_id=1):
+    """Removed all products from a specified Cart"""
+
+    del_num = Cart_Product.objects.filter(cart_id__exact=cart_id).delete()
+    return True if del_num[0] > 0 else False

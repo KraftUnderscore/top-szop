@@ -11,6 +11,8 @@ from .database_operations import \
 class Memory():
     def __init__(self):
         self.codes_to_remove = []
+        self.prods_to_remove = []
+        self.add_product_data = []
 
 # My proposition for interface between Templates and backend:
 # <interface number> url path/ subpath, ex. for 3.1.2 localhost:8000/my_cart/search
@@ -24,9 +26,7 @@ class Memory():
 # out: all products in cart
 def my_cart(request):
     products = cart_op.get_all_products_from_cart()
-    clear = request.GET.get('clear', '')
-    if clear != '':
-        cart_op.clear_cart()
+
     context = {
         'products_list': products,
     }
@@ -157,6 +157,7 @@ def payment(request):
         context = {
             'message': 'Operacja zakończona sukcesem',
         }
+        cart_op.clean_cart()
     elif status == 'no':
         context = {
             'message': 'Przepraszamy, operacja zakończona niepowodzeniem',
@@ -274,7 +275,9 @@ def add_product(request):
     # check data validity
     if 'confirm' in data:
         if data['confirm'] == "yes":
-            product_op.add_product(data['nazwa'], data['opis'], data['cena'])
+            p_data = Memory.add_product_data
+            product_op.add_product(p_data['nazwa'], p_data['opis'], p_data['cena'])
+            Memory.add_product_data = []
             return edit_products(request)
         else:
             # just go back
@@ -292,8 +295,8 @@ def add_product(request):
     if is_good == 'good':
         context['confirm'] = 'good'
         context['message'] = "Czy na pewno chcesz dodać produkt?"
-        context['params'] = "/panel/add_product?confirm=yes&" + ''.join(
-            ["&" + k + "=" + v for k, v in data.items()])
+        context['params'] = "/panel/edit_products/add_product?confirm=yes"
+        Memory.add_product_data = data
     elif is_good == 'bad':
         context['confirm'] = 'bad'
         context['message'] = "Wprowadzone dane są niepoprawne!"
@@ -313,22 +316,28 @@ def remove_checked(request):
     for key in request.GET:
         data[key] = request.GET.get(key, '')
         if data[key] == "true":
+            print(key)
             prod = product_op.get_product_by_name(key)
             products.append((prod.name, prod.id, prod.price))
 
     confirmed = request.GET.get('confirm', '')
-
     # data has list of product names that have been checked [name, price, code]
     context = {
         'products_list': products
     }
 
     if confirmed != '':
-        for prod in products:
+        print("test")
+        print(Memory.prods_to_remove)
+        for prod in Memory.prods_to_remove:
             print(prod)
             print(product_op.remove_product(prod[1]))
 
+        Memory.prods_to_remove = []
         context['message'] = "Pomyślnie usunięto produkty."
+    else:
+        Memory.prods_to_remove = products
+
 
     return render(request, 'server/remove_checked.html', context)
 
